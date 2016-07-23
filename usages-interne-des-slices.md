@@ -4,11 +4,11 @@
 
 ## Introduction
 
-Le type slice dans Go offre un moyen pratique et efficace de travailler avec des séquences de données typées. Les slices sont analogues aux tableaux dans d'autres langues, mais ont quelques propriétés inhabituelles. Cet article se penchera sur ce que sont les slices et comment elles sont utilisés.
+Le type slice dans **Go** offre un moyen pratique et efficace de travailler avec des séquences de données typées. Les slices sont analogues aux tableaux dans d'autres langues, mais ont quelques propriétés inhabituelles. Cet article se penchera sur ce que sont les slices et comment elles sont utilisés.
 
 ## Tableaux
 
-Le type slice est une abstraction construite au-dessus du type tableau de Go c'est pourquoi avant de comprendre les slices, nous devons d'abord comprendre les tableaux.
+Le type slice est une abstraction construite au-dessus du type tableau de **Go** c'est pourquoi avant de comprendre les slices, nous devons d'abord comprendre les tableaux.
 
 Une définition de type tableau spécifie une longueur et un type d'élément. Par exemple, le type `[4]int` représente un tableau de quatre nombres entiers. La taille d'un tableau est fixe ; sa longueur est une partie de son type (`[4]int` et `[5]int` sont distincts et de types incompatibles). Les tableaux peuvent être indexés de la manière habituelle, de sorte que l'expression `s[n]` accède au nième élément, à partir de zéro.
 
@@ -29,7 +29,7 @@ La représentation en mémoire de `[4]int` est à seulement quatre valeurs enti�
 
 ![](http://blog.golang.org/go-slices-usage-and-internals_slice-array.png)
 
-Les tableaux dans Go sont des valeurs. Une variable tableau représente l'ensemble du tableau ; il n'est pas un pointeur vers le le tableau (comme ce serait le cas en C). Cela signifie que lorsque vous affectez ou passer en paramètre un tableau vous faites une copie de son contenu (Pour éviter la copie, vous pouvez passer un pointeur vers le tableau, mais qui est un pointeur vers un tableau, pas un tableau). Une façon de penser les tableaux est de le voir comme un type de structure composé de champs indexée plutôt que des champs nommés : une taille fixe de valeur composite.
+Les tableaux dans **Go** sont des valeurs. Une variable tableau représente l'ensemble du tableau ; il n'est pas un pointeur vers le le tableau (comme ce serait le cas en C). Cela signifie que lorsque vous affectez ou passer en paramètre un tableau vous faites une copie de son contenu (Pour éviter la copie, vous pouvez passer un pointeur vers le tableau, mais qui est un pointeur vers un tableau, pas un tableau). Une façon de penser les tableaux est de le voir comme un type de structure composé de champs indexée plutôt que des champs nommés : une taille fixe de valeur composite.
 
 Un tableau littéral peut être spécifié comme ceci:
 
@@ -47,7 +47,7 @@ Dans les deux cas, le type de `b` est `[2]string`.
 
 ## slices
 
-Les tableaux ont leur place, mais ils sont un peu rigides, de sorte que vous ne les voyez pas trop souvent dans du code Go. Les slices quand à elles sont partout. Elles sont contruites par dessus les tableaux pour fournir une grande puissance et ajoute de la souplesse d'utilisation.
+Les tableaux ont leur place, mais ils sont un peu rigides, de sorte que vous ne les voyez pas trop souvent dans du code **Go**. Les slices quand à elles sont partout. Elles sont contruites par dessus les tableaux pour fournir une grande puissance et ajoute de la souplesse d'utilisation.
 
 La spécification de type pour une slice est `[]T` , où `T` est le type des éléments de la slice. Contrairement à un type tableau, un type de slice n'a pas de longueur spécifiée.
 
@@ -129,7 +129,7 @@ s = s[2:4]
 
 ![](http://blog.golang.org/go-slices-usage-and-internals_slice-2.png)
 
-slicer ne copie pas les données de la slice. Go crée une nouvelle valeur de slice qui pointe vers le tableau d'origine. Cela rend les opérations de slice aussi efficace que la manipulation d'indices de tableau. Par conséquent, la modification des éléments (non la slice elle-même) d'une slice modifie les éléments de la slice d'origine :
+slicer ne copie pas les données de la slice. **Go** crée une nouvelle valeur de slice qui pointe vers le tableau d'origine. Cela rend les opérations de slice aussi efficace que la manipulation d'indices de tableau. Par conséquent, la modification des éléments (non la slice elle-même) d'une slice modifie les éléments de la slice d'origine :
 
 
 ```go
@@ -209,7 +209,7 @@ p = AppendByte(p, 7, 11, 13)
 
 Des fonctions comme `AppendByte` sont utiles, car elles offrent un contrôle complet sur la façon dont les slices sont agrandies. Selon les caractéristiques du programme, il peut être souhaitable d'allouer en morceaux plus petits ou plus grands, ou de mettre un plafond sur la taille d'une réaffectation.
 
-Mais la plupart des programmes ne nécessitent pas un contrôle si complet, c'est pouquoi Go fournit une fonction intégré `append` qui est suffisante pour la plupart des cas; elle a la signature suivante :
+Mais la plupart des programmes ne nécessitent pas un contrôle si complet, c'est pouquoi **Go** fournit une fonction intégré `append` qui est suffisante pour la plupart des cas; elle a la signature suivante :
 
 ```go
 func append(s []T, x ...T) []T
@@ -282,7 +282,7 @@ Une version plus concise de cette fonction pourrait être construit en utilisant
 
 ## Lectures complémentaires
 
-[Efficace Go](https://golang.org/doc/effective_go.html) contient des explications en profondeur des [slices](http://golang.org/doc/effective_go.html#slices) et des [tableaux](http://golang.org/doc/effective_go.html#arrays) et la [spécification du langage](http://golang.org/doc/go_spec.html) Go définit les slices et leurs fonctions d'assistance associés.
+[**Efficace Go**](https://golang.org/doc/effective_go.html) contient des explications en profondeur des [slices](http://golang.org/doc/effective_go.html#slices) et des [tableaux](http://golang.org/doc/effective_go.html#arrays) et la [spécification du langage](http://golang.org/doc/go_spec.html) **Go** définit les slices et leurs fonctions d'assistance associés.
 
 By Andrew Gerrand
 
