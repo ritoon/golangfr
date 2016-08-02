@@ -174,8 +174,6 @@ Les commentaires de la doc marchent mieux avec des phrases complètes, ce qui pe
 func Compile(str string) (regexp *Regexp, err error) {
 ```
 
-If the name always begins the comment, the output of godoc can usefully be run through grep. Imagine you couldn't remember the name "Compile" but were looking for the parsing function for regular expressions, so you ran the command,
-
 Si le nom de package commence toujours par son commentaire, l'export dans **godoc** en sera plus partique via grep. Immaginez que vous ne vous rappelez plus du nom "Compile" mais que vous être entrain de chercher pour une fonction de parsing avec les expressions régulières, vous pouvez lancer la commande suivante :
 
 ```sh
