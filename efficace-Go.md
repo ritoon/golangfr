@@ -61,18 +61,18 @@
 * [Serveur web](#Awebserver)
 
 
-## Introduction <a id="Introduction"></a> 
+## Introduction <a id="Introduction"></a>
 
 Go est un nouveau langage. Bien qu'il emprunte des idées à partir d'autres existants, il a des propriétés inhabituelles qui lui permet de réaliser des programmes éfficaces mais avec un caractère différent des programmes écrits de ses pairs. Une simple traduction d'un programme C++ ou Java en Go est peu susceptible de produire un résultat satisfaisant. Les programmes Java sont écrits en Java, pas en Go. D'un autre coté, réfléchir aux problèmes avec une vision Go permet de réaliser un programme réussi mais en tous cas assez différent. En d'autres termes pour écrire du Go, il est essentiel d'avoir compris ses propriétés et ses idiomes. Il est également important de connaître les conventions établies pour la programmation en Go, comme la dénomination, le formatage, la construction du programme, et ainsi de suite, de sorte que les programmes que vous écrivez seront facile à comprendre pour les autres programmeurs Go.
 
 Ce document donne des conseils pour l'écriture de code propre et idiomatique en Go. Il complète la [spécification du langage](https://golang.org/ref/spec), le [Tour de Go](https://tour.golang.org/) et [Comment écrire Code Go](https://golang.org/doc/code.html), tout ce dont vous devriez lire en premier.
 
-### Examples <a id="Examples"></a> 
+### Examples <a id="Examples"></a>
 
 [Les sources des paquets Go](https://golang.org/src/) sont destinés à servir non seulement comme la bibliothèque de base, mais aussi comme des exemples de la façon d'utiliser le language. En outre, beaucoup de paquets contiennent de travail, autonome exemples exécutables que vous pouvez exécuter directement depuis le site Web de [golang.org](https://golang.org/), comme [celui-ci](https://golang.org/pkg/strings/#example_Map) (si nécessaire, cliquez sur le mot «Exemple» pour l'ouvrir ). Si vous avez une question sur la façon d'aborder un problème ou comment quelque chose pourrait être mise en œuvre, la documentation, le code et les exemples dans la bibliothèque peuvent fournir des réponses, des idées et dévoiler les coulisses.
 
 
-## Formatage <a id="Formatting"></a> 
+## Formatage <a id="Formatting"></a>
 
 les questions de mise en forme sont les plus litigieuses, mais aussi les moins conséquentes. Les gens peuvent s'adapter à différents styles de mise en forme, mais il est préférable qu'elles n'aient pas à le faire et que le moins de temps soit consacré à la question si tout le monde adhère au même style. Le problème est de savoir comment aborder cette Utopie sans une longue charte descriptive de style.
 
@@ -104,7 +104,7 @@ Certains détails de mise en forme demeurent. Très brièvement :
 **Indentation**
 
 Nous utilisons des onglets pour l'indentation et gofmt les émet par défaut. Utilisez des espaces uniquement si vous devez.
-    
+
 **Longueur de ligne**
 
 Go n'a pas de limite de longueur de ligne. Ne vous inquiétez pas de déborder sur votre carte perforée ! Si une ligne paraît trop longue, vous pouvez faire un retour à la ligne et une tabulation en supplémentaire.
@@ -121,7 +121,7 @@ x<<8 + y<<16
 
 l'espacement est signifiant, contrairement aux autres languages.
 
-## Les commentaires <a id="Commentary"></a> 
+## Les commentaires <a id="Commentary"></a>
 
 Go fournit des blocs de commentaires ```/ * * /``` au même titre que le C et le C++ et des commentaires en ligne ```//```. Les commentaires de ligne sont la norme ; les commentaires de bloc eux apparaissent surtout comme des commentaires du paquet, mais sont aussi utiles pour désactiver de larges pans de code.
 
@@ -160,16 +160,13 @@ Si le paquet est simple, les commentaires du paquet peuvent être bref.
 // manipulating slash-separated filename paths.
 ```
 
-Comments do not need extra formatting such as banners of stars. The generated output may not even be presented in a fixed-width font, so don't depend on spacing for alignment—godoc, like gofmt, takes care of that. The comments are uninterpreted plain text, so HTML and other annotations such as _this_ will reproduce verbatim and should not be used. One adjustment godoc does do is to display indented text in a fixed-width font, suitable for program snippets. The package comment for the fmt package uses this to good effect.
+Les commentaires ne nécessitent pas de mise en forme supplémentaire tels que des bannières publicitaires. La sortie générée ne peut même pas être présenté dans une police à largeur fixe, donc ne dépend pas de l'espacement pour l'alignement **godoc**, comme **gofmt**, prend soin de cela. Les commentaires sont sans interprétation en texte brut, de sorte que HTML et d'autres annotations telles que ```_this_``` seront reporduites textuellement c'est pourquoi elles ne doivent pas être utilisé. Un seul réglage dans **godoc** possible est ​​d'afficher une police à largeur fixe avec l'intendation du texte, adapté aux extraits du programme. Les commentaires du paquet fmt utilise à bon escient cette fonctionnalité.
 
-Les commentaires ne nécessitent pas la mise en forme supplémentaire tels que des bannières d'étoiles. La sortie générée ne peut même pas être présenté dans une police à largeur fixe, donc ne dépend pas de l'espacement pour l'alignement **GoDoc**, comme **gofmt**, prend soin de cela. Les commentaires sont sans interprétation en texte brut, de sorte que HTML et d'autres annotations telles que ```_this_``` seront reporduites textuellement c'est pourquoi elles ne doivent pas être utilisé. Un seul réglage dans **GoDoc** possible est ​​d'afficher une police à largeur fixe avec l'intendation du texte, adapté aux extraits du programme. Les commentaires du paquet pour le paquet fmt utilise à bon escient cette fonctionnalité.
+Selon le contexte, **godoc** pourrait même ne pas reformater commentaires. C'est pourquoi, il vaut mieux directement utiliser la bonne orthographe, la ponctuation, la strucuture de phrase, découper les longues lignes... etc pour s'assurer du résultat produit.
 
+Dans un package, tous commentaires précédent immédiatement une déclaration de haut niveau est utilisé pour la documentation. Toutes déclaration exportés (première lettre en majuscule) dans un paquet doit avoir son commentaire de documentation.
 
-Depending on the context, godoc might not even reformat comments, so make sure they look good straight up: use correct spelling, punctuation, and sentence structure, fold long lines, and so on.
-
-Inside a package, any comment immediately preceding a top-level declaration serves as a doc comment for that declaration. Every exported (capitalized) name in a program should have a doc comment.
-
-Doc comments work best as complete sentences, which allow a wide variety of automated presentations. The first sentence should be a one-sentence summary that starts with the name being declared.
+Les commentaires de la doc marchent mieux avec des phrases complètes, ce qui permet une plus large palette de présentation automatisé. La première phrase doit, en principe, être une seule phrase permettant de résumer l'objet de la déclaration et doit commencer par son nom.
 
 ```go
 // Compile parses a regular expression and returns, if successful, a Regexp
@@ -179,11 +176,13 @@ func Compile(str string) (regexp *Regexp, err error) {
 
 If the name always begins the comment, the output of godoc can usefully be run through grep. Imagine you couldn't remember the name "Compile" but were looking for the parsing function for regular expressions, so you ran the command,
 
+Si le nom de package commence toujours par son commentaire, l'export dans **godoc** en sera plus partique via grep. Immaginez que vous ne vous rappelez plus du nom "Compile" mais que vous être entrain de chercher pour une fonction de parsing avec les expressions régulières, vous pouvez lancer la commande suivante :
+
 ```sh
 $ godoc regexp | grep parse
 ```
 
-If all the doc comments in the package began, "This function...", grep wouldn't help you remember the name. But because the package starts each doc comment with the name, you'd see something like this, which recalls the word you're looking for.
+Si tous les commentaires de la doc commançaient par : "This function...", grep ne pourrait pas aider pour se rappeler du nom. Mais parce que les paquets commencent chacuns par le commentaire avec le nom, vous verrez quelque chose de famillier, ce qui vous rappellera le mot que vous être entrain de chercher.
 
 ```sh
 $ godoc regexp | grep parse
@@ -193,7 +192,7 @@ $ godoc regexp | grep parse
 $
 ```
 
-Go's declaration syntax allows grouping of declarations. A single doc comment can introduce a group of related constants or variables. Since the whole declaration is presented, such a comment can often be perfunctory.
+Go permet de réaliser des groupement de déclaration. Un seul commentaire permet d'introduire un groupe de constantes ou variables associés. À partir du moment que ce commentaire groupé a été réalisé, les commentaires suivants peuvent être plus sommaires.
 
 ```go
 // Error codes returned by failures to parse an expression.
@@ -205,7 +204,7 @@ var (
 )
 ```
 
-Grouping can also indicate relationships between items, such as the fact that a set of variables is protected by a mutex.
+Grouper permet aussi d'indiquer une relation entre des éléments, comme le fait qu'un ensemble de variables est protégé par un mutex.
 
 ```go
 var (
@@ -216,24 +215,31 @@ var (
 )
 ```
 
-## Nommage <a id="Names"></a> 
+## Nommage <a id="Names"></a>
 
-Names are as important in Go as in any other language. They even have semantic effect: the visibility of a name outside a package is determined by whether its first character is upper case. It's therefore worth spending a little time talking about naming conventions in Go programs.
+Les noms sont aussi imporants en Go que dans tous autres langages. Il y a même un effet sémantique : la visibilité d'une déclaration à l'extérieur du paquet est déterminé en fonction de sa première lettre en capitale. C'est pouquoi nous pouvons passer un peut de temps sur le sujet à savoir quels sont les conventions de nommage dans un programme Go ?
 
-### Les noms de paquets <a id="Packagenames"></a> 
+### Les noms de paquets <a id="Packagenames"></a>
 
-When a package is imported, the package name becomes an accessor for the contents. After
+Quand un paquet est importé, le nom du paquet devient un accésseur de son contenu. Après :
 
+```go
 import "bytes"
+```
+
 the importing package can talk about bytes.Buffer. It's helpful if everyone using the package can use the same name to refer to its contents, which implies that the package name should be good: short, concise, evocative. By convention, packages are given lower case, single-word names; there should be no need for underscores or mixedCaps. Err on the side of brevity, since everyone using your package will be typing that name. And don't worry about collisions a priori. The package name is only the default name for imports; it need not be unique across all source code, and in the rare case of a collision the importing package can choose a different name to use locally. In any case, confusion is rare because the file name in the import determines just which package is being used.
 
-Another convention is that the package name is the base name of its source directory; the package in src/encoding/base64 is imported as "encoding/base64" but has name base64, not encoding_base64 and not encodingBase64.
+le paquet importateur peut parler du **bytes.Buffer**. C'est beaucoup plus pratique si les développeurs utilisant les même paquets peuvent utiliser les même noms pour faire référence aux même contenus. Le nom du paquet doit par conséquent être parfait: court, concis, évocateur. Par convention, les paquets sont en minuscules, les noms d'un seul mot; il devrait y avoir aucun besoin de tiret ou d'une notation en casseMélangée. **Err** est un exemple sur le côté de la brièveté, puisque tout le monde en utilisant votre paquet écrira ce nom. Et ne vous inquiétez pas des collisions a priori. Le nom du paquet est seulement le nom par défaut pour les importations; il n'a pas besoin d'être unique dans l'ensemble du code source, et dans des rares cas d'une collision, le paquet importateur peut choisir un nom différent à utiliser localement. Dans tous les cas, la confusion est rare parce que le nom de fichier dans l'importation détermine simplement quel paquet est utilisé.
+
+Une autre convention est que le nom du paquet est le nom de base pour son dossier source ; le paquet dans **src/encoding/base64** est importé tel que **encoding/base64** mais a comme nom **base64** et pas **encoding_base64** ou encore **encodingBase64**.
 
 The importer of a package will use the name to refer to its contents, so exported names in the package can use that fact to avoid stutter. (Don't use the import . notation, which can simplify tests that must run outside the package they are testing, but should otherwise be avoided.) For instance, the buffered reader type in the bufio package is called Reader, not BufReader, because users see it as bufio.Reader, which is a clear, concise name. Moreover, because imported entities are always addressed with their package name, bufio.Reader does not conflict with io.Reader. Similarly, the function to make new instances of ring.Ring—which is the definition of a constructor in Go—would normally be called NewRing, but since Ring is the only type exported by the package, and since the package is called ring, it's called just New, which clients of the package see as ring.New. Use the package structure to help you choose good names.
 
+L'importateur d'un package utilisera le nom pour faire référence à son contenu, par conséquent, le nommage des déclarations à l'intérieur du paquet doiivent tennir en compte ce fait afin d'éviter tous phénomènes de répétition. (Ne pas utiliser la notation d'importation **.**, ce qui peut simplifier les tests qui doivent fonctionner en dehors du package qu'ils testent, mais elles devraient être évitées.) Par exemple, le type de lecteur tamponnée dans le package bufio est appelé Reader, pas BufReader, parce les utilisateurs considèrent comme bufio.Reader, qui est, un nom clair et concis. En outre, parce que les entités importées sont toujours traitées avec leur nom de package, bufio.Reader ne pas en conflit avec io.Reader. De même, la fonction de faire de nouvelles instances de ring.Ring-ce qui est la définition d'un constructeur à Go-serait normalement appelé nouveauRing, mais depuis Ring est le seul type de produit exporté par le paquet, et puisque le package est appelé anneau, il est appelé juste Nouveau, que les clients du forfait voient comme ring.New. Utilisez la structure de paquet pour vous aider à choisir les bons noms.
+
 Another short example is once.Do; once.Do(setup) reads well and would not be improved by writing once.DoOrWaitUntilDone(setup). Long names don't automatically make things more readable. A helpful doc comment can often be more valuable than an extra long name.
 
-### Getters <a id="Getters"></a> 
+### Getters <a id="Getters"></a>
 
 Go doesn't provide automatic support for getters and setters. There's nothing wrong with providing getters and setters yourself, and it's often appropriate to do so, but it's neither idiomatic nor necessary to put Get into the getter's name. If you have a field called owner (lower case, unexported), the getter method should be called Owner (upper case, exported), not GetOwner. The use of upper-case names for export provides the hook to discriminate the field from the method. A setter function, if needed, will likely be called SetOwner. Both names read well in practice:
 
@@ -244,17 +250,17 @@ if owner != user {
 }
 ```
 
-### Les noms d'interfaces <a id="Interfacenames"></a> 
+### Les noms d'interfaces <a id="Interfacenames"></a>
 
 By convention, one-method interfaces are named by the method name plus an -er suffix or similar modification to construct an agent noun: Reader, Writer, Formatter, CloseNotifier etc.
 
 There are a number of such names and it's productive to honor them and the function names they capture. Read, Write, Close, Flush, String and so on have canonical signatures and meanings. To avoid confusion, don't give your method one of those names unless it has the same signature and meaning. Conversely, if your type implements a method with the same meaning as a method on a well-known type, give it the same name and signature; call your string-converter method String not ToString.
 
-### MélangesDeCasses <a id="MixedCaps"></a> 
+### MélangesDeCasses <a id="MixedCaps"></a>
 
 Finally, the convention in Go is to use MixedCaps or mixedCaps rather than underscores to write multiword names.
 
-## Les points virgules <a id="Semicolons"></a> 
+## Les points virgules <a id="Semicolons"></a>
 
 Like C, Go's formal grammar uses semicolons to terminate statements, but unlike in C, those semicolons do not appear in the source. Instead the lexer uses a simple rule to insert semicolons automatically as it scans, so the input text is mostly free of them.
 
@@ -286,11 +292,11 @@ if i < f()  // wrong!
 }
 ```
 
-## Les structures de control  <a id="Controlstructures"></a> 
+## Les structures de control  <a id="Controlstructures"></a>
 
 The control structures of Go are related to those of C but differ in important ways. There is no do or while loop, only a slightly generalized for; switch is more flexible; if and switch accept an optional initialization statement like that of for; break and continue statements take an optional label to identify what to break or continue; and there are new control structures including a type switch and a multiway communications multiplexer, select. The syntax is also slightly different: there are no parentheses and the bodies must always be brace-delimited.
 
-### If <a id="If"></a> 
+### If <a id="If"></a>
 
 In Go a simple if looks like this:
 
@@ -335,7 +341,7 @@ if err != nil {
 }
 codeUsing(f, d)
 ```
-### Redeclaration et réaffectation <a id="Redeclarationandreassignment"></a> 
+### Redeclaration et réaffectation <a id="Redeclarationandreassignment"></a>
 
 An aside: The last example in the previous section demonstrates a detail of how the := short declaration form works. The declaration that calls os.Open reads,
 
@@ -354,7 +360,7 @@ This unusual property is pure pragmatism, making it easy to use a single err val
 
 § It's worth noting here that in Go the scope of function parameters and return values is the same as the function body, even though they appear lexically outside the braces that enclose the body.
 
-### For <a id="For"></a> 
+### For <a id="For"></a>
 
 The Go for loop is similar to—but not the same as—C's. It unifies for and while and there is no do-while. There are three forms, only one of which has semicolons.
 
@@ -430,7 +436,7 @@ for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
 }
 ```
 
-### Switch <a id="Switch"></a> 
+### Switch <a id="Switch"></a>
 
 Go's switch is more general than C's. The expressions need not be constants or even integers, the cases are evaluated top to bottom until a match is found, and if the switch has no expression it switches on true. It's therefore possible—and idiomatic—to write an if-else-if-else chain as a switch.
 
@@ -514,7 +520,7 @@ func Compare(a, b []byte) int {
 }
 ```
 
-### Type switch <a id="Typeswitch"></a> 
+### Type switch <a id="Typeswitch"></a>
 
 A switch can also be used to discover the dynamic type of an interface variable. Such a type switch uses the syntax of a type assertion with the keyword type inside the parentheses. If the switch declares a variable in the expression, the variable will have the corresponding type in each clause. It's also idiomatic to reuse the name in such cases, in effect declaring a new variable with the same name but a different type in each case.
 
@@ -535,9 +541,9 @@ case *int:
 }
 ```
 
-## Les fonctions <a id="Functions"></a> 
+## Les fonctions <a id="Functions"></a>
 
-### Retours de multiples valeurs <a id="Multiplereturnvalues"></a> 
+### Retours de multiples valeurs <a id="Multiplereturnvalues"></a>
 
 One of Go's unusual features is that functions and methods can return multiple values. This form can be used to improve on a couple of clumsy idioms in C programs: in-band error returns such as -1 for EOF and modifying an argument passed by address.
 
@@ -568,7 +574,7 @@ You could use it to scan the numbers in an input slice b like this:
     }
 ```
 
-### Les paramètres de retour nommés <a id="Namedresultparameters"></a> 
+### Les paramètres de retour nommés <a id="Namedresultparameters"></a>
 
 The return or result "parameters" of a Go function can be given names and used as regular variables, just like the incoming parameters. When named, they are initialized to the zero values for their types when the function begins; if the function executes a return statement with no arguments, the current values of the result parameters are used as the returned values.
 
@@ -589,7 +595,7 @@ func ReadFull(r Reader, buf []byte) (n int, err error) {
 }
 ```
 
-### Defer <a id="Defer"></a> 
+### Defer <a id="Defer"></a>
 
 Go's defer statement schedules a function call (the deferred function) to be run immediately before the function executing the defer returns. It's an unusual but effective way to deal with situations such as resources that must be released regardless of which path a function takes to return. The canonical examples are unlocking a mutex or closing a file.
 
@@ -683,9 +689,9 @@ leaving: b
 
 For programmers accustomed to block-level resource management from other languages, defer may seem peculiar, but its most interesting and powerful applications come precisely from the fact that it's not block-based but function-based. In the section on panic and recover we'll see another example of its possibilities.
 
-## Data <a id="Data"></a> 
+## Data <a id="Data"></a>
 
-### L'Allocation avec new <a id="Allocationwithnew"></a> 
+### L'Allocation avec new <a id="Allocationwithnew"></a>
 
 Go has two allocation primitives, the built-in functions new and make. They do different things and apply to different types, which can be confusing, but the rules are simple. Let's talk about new first. It's a built-in function that allocates memory, but unlike its namesakes in some other languages it does not initialize the memory, it only zeros it. That is, new(T) allocates zeroed storage for a new item of type T and returns its address, a value of type *T. In Go terminology, it returns a pointer to a newly allocated zero value of type T.
 
@@ -707,7 +713,7 @@ p := new(SyncedBuffer)  // type *SyncedBuffer
 var v SyncedBuffer      // type  SyncedBuffer
 ```
 
-### Constructeur et composite littéreaux <a id="Constructorsandcompositeliterals"></a> 
+### Constructeur et composite littéreaux <a id="Constructorsandcompositeliterals"></a>
 
 Sometimes the zero value isn't good enough and an initializing constructor is necessary, as in this example derived from package os.
 
@@ -759,7 +765,7 @@ s := []string      {Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
 m := map[int]string{Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
 ```
 
-### Allocation avec make <a id="Allocationwithmake"></a> 
+### Allocation avec make <a id="Allocationwithmake"></a>
 
 Back to allocation. The built-in function make(T, args) serves a purpose different from new(T). It creates slices, maps, and channels only, and it returns an initialized (not zeroed) value of type T (not *T). The reason for the distinction is that these three types represent, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data (inside an array), the length, and the capacity, and until those items are initialized, the slice is nil. For slices, maps, and channels, make initializes the internal data structure and prepares the value for use. For instance,
 
@@ -782,7 +788,7 @@ v := make([]int, 100)
 
 Remember that make applies only to maps, slices and channels and does not return a pointer. To obtain an explicit pointer allocate with new or take the address of a variable explicitly.
 
-### Tableaux <a id="Arrays"></a> 
+### Tableaux <a id="Arrays"></a>
 
 Arrays are useful when planning the detailed layout of memory and sometimes can help avoid allocation, but primarily they are a building block for slices, the subject of the next section. To lay the foundation for that topic, here are a few words about arrays.
 
@@ -807,7 +813,7 @@ x := Sum(&array)  // Note the explicit address-of operator
 
 But even this style isn't idiomatic Go. Use slices instead.
 
-### Tranches (slices) <a id="Slices"></a> 
+### Tranches (slices) <a id="Slices"></a>
 
 Slices wrap arrays to give a more general, powerful, and convenient interface to sequences of data. Except for items with explicit dimension such as transformation matrices, most array programming in Go is done with slices rather than simple arrays.
 
