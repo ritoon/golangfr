@@ -41,3 +41,5 @@ Les appariteur du GC de Go 1.5 dans un futur où les pauses qui arrêtent le run
 
 
 By Richard Hudson
+
+Traduit le 02 Août 2016 par Henri Lepic à partir du [Blog Golang.org](https://blog.golang.org/go15gc).
