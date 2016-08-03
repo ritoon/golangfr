@@ -235,8 +235,6 @@ Un dernier cours exemple est **once.Do** ; **once.Do(setup)** se lit facilement 
 
 ### Getters <a id="Getters"></a>
 
-Go doesn't provide automatic support for getters and setters. There's nothing wrong with providing getters and setters yourself, and it's often appropriate to do so, but it's neither idiomatic nor necessary to put Get into the getter's name. If you have a field called owner (lower case, unexported), the getter method should be called Owner (upper case, exported), not GetOwner. The use of upper-case names for export provides the hook to discriminate the field from the method. A setter function, if needed, will likely be called SetOwner. Both names read well in practice:
-
 Go ne donne pas automatiquement des getteurs et setteurs. Il y a rien de mal à les créer soi-même et il semble normal d'en créer, mais il n'est pas idiomatique ni nécessaire d'ajouter **Get** dans le nom du getteur. Si vous avez un champs appelé **owner** (bas de casse : non exporté), la méthode getteur serait **Owner** (haut de casse : exporté) et non **GetOwner**. L'utilisation de la casse pour l'exportation permet de distinguer le champs de la méthode. Si nous avons besoin d'une fonction setteur, nous pourrions l'appeler **SetOwner**. Les deux noms se lisent facilement dans la pratique :
 
 ```go
