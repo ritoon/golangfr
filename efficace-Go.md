@@ -225,21 +225,19 @@ Quand un paquet est importé, le nom du paquet devient un accésseur de son cont
 import "bytes"
 ```
 
-the importing package can talk about bytes.Buffer. It's helpful if everyone using the package can use the same name to refer to its contents, which implies that the package name should be good: short, concise, evocative. By convention, packages are given lower case, single-word names; there should be no need for underscores or mixedCaps. Err on the side of brevity, since everyone using your package will be typing that name. And don't worry about collisions a priori. The package name is only the default name for imports; it need not be unique across all source code, and in the rare case of a collision the importing package can choose a different name to use locally. In any case, confusion is rare because the file name in the import determines just which package is being used.
-
-le paquet importateur peut parler du **bytes.Buffer**. C'est beaucoup plus pratique si les développeurs utilisant les même paquets peuvent utiliser les même noms pour faire référence aux même contenus. Le nom du paquet doit par conséquent être parfait: court, concis, évocateur. Par convention, les paquets sont en minuscules, les noms d'un seul mot; il devrait y avoir aucun besoin de tiret ou d'une notation en casseMélangée. **Err** est un exemple sur le côté de la brièveté, puisque tout le monde en utilisant votre paquet écrira ce nom. Et ne vous inquiétez pas des collisions a priori. Le nom du paquet est seulement le nom par défaut pour les importations; il n'a pas besoin d'être unique dans l'ensemble du code source, et dans des rares cas d'une collision, le paquet importateur peut choisir un nom différent à utiliser localement. Dans tous les cas, la confusion est rare parce que le nom de fichier dans l'importation détermine simplement quel paquet est utilisé.
+Le paquet importateur peut parler du **bytes.Buffer**. C'est beaucoup plus pratique si les développeurs utilisant les même paquets peuvent utiliser les même noms pour faire référence aux même contenus. Le nom du paquet doit par conséquent être parfait : court, concis, évocateur. Par convention, les paquets sont en minuscules, les noms d'un seul mot; il devrait y avoir aucun besoin de tiret ou d'une notation en casseMélangée. **Err** est un exemple pour sa  brièveté, puisque tout le monde en utilisant ce paquet écrira ce nom. Et ne vous inquiétez pas des collisions a priori. Le nom du paquet est seulement le nom par défaut pour les importations ; il n'a pas besoin d'être unique dans l'ensemble du code source, et dans des rares cas d'une collision, le paquet importateur peut choisir un nom différent à utiliser localement. Dans tous les cas, la confusion est rare parce que le nom de fichier dans l'importation détermine simplement quel paquet est utilisé.
 
 Une autre convention est que le nom du paquet est le nom de base pour son dossier source ; le paquet dans **src/encoding/base64** est importé tel que **encoding/base64** mais a comme nom **base64** et pas **encoding_base64** ou encore **encodingBase64**.
 
-The importer of a package will use the name to refer to its contents, so exported names in the package can use that fact to avoid stutter. (Don't use the import . notation, which can simplify tests that must run outside the package they are testing, but should otherwise be avoided.) For instance, the buffered reader type in the bufio package is called Reader, not BufReader, because users see it as bufio.Reader, which is a clear, concise name. Moreover, because imported entities are always addressed with their package name, bufio.Reader does not conflict with io.Reader. Similarly, the function to make new instances of ring.Ring—which is the definition of a constructor in Go—would normally be called NewRing, but since Ring is the only type exported by the package, and since the package is called ring, it's called just New, which clients of the package see as ring.New. Use the package structure to help you choose good names.
+L'importateur d'un package utilisera le nom pour faire référence à son contenu, par conséquent, le nommage des déclarations à l'intérieur du paquet doivent tennir en compte ce fait afin d'éviter tous phénomènes de répétition. Évitez  la notation d'importation ``.``, ce qui peut simplifier les tests qui doivent fonctionner en dehors du package qu'ils testent. Par exemple, le type de reader buffurisé dans le package **bufio** est appelé **Reader**, pas **BufReader**, parce les utilisateurs considèrent **bufio.Reader** comme un nom clair et concis. En outre, parce que les entités importées sont toujours traitées avec leur nom de package, **bufio.Reader** n'est pas en conflit avec **io.Reader**. De même, la fonction permettant de créer de nouvelles instances de **ring.Ring**, ce qui est la définition d'un constructeur dans Go serait normalement appelé **NewRing**, mais sachant que **Ring** est le seul type  exporté par le paquet et puisque le paquet est appelé **ring**, il est appelé simplement **New**, ainsi les utilisateurs du paquet voient **ring.New**. Utilisez la structure de paquet pour vous aider à choisir les bons noms.
 
-L'importateur d'un package utilisera le nom pour faire référence à son contenu, par conséquent, le nommage des déclarations à l'intérieur du paquet doiivent tennir en compte ce fait afin d'éviter tous phénomènes de répétition. (Ne pas utiliser la notation d'importation **.**, ce qui peut simplifier les tests qui doivent fonctionner en dehors du package qu'ils testent, mais elles devraient être évitées.) Par exemple, le type de lecteur tamponnée dans le package bufio est appelé Reader, pas BufReader, parce les utilisateurs considèrent comme bufio.Reader, qui est, un nom clair et concis. En outre, parce que les entités importées sont toujours traitées avec leur nom de package, bufio.Reader ne pas en conflit avec io.Reader. De même, la fonction de faire de nouvelles instances de ring.Ring-ce qui est la définition d'un constructeur à Go-serait normalement appelé nouveauRing, mais depuis Ring est le seul type de produit exporté par le paquet, et puisque le package est appelé anneau, il est appelé juste Nouveau, que les clients du forfait voient comme ring.New. Utilisez la structure de paquet pour vous aider à choisir les bons noms.
-
-Another short example is once.Do; once.Do(setup) reads well and would not be improved by writing once.DoOrWaitUntilDone(setup). Long names don't automatically make things more readable. A helpful doc comment can often be more valuable than an extra long name.
+Un dernier cours exemple est **once.Do** ; **once.Do(setup)** se lit facilement et le fait d'écrire **once.DoOrWaitUntilDone(setup)** ne permettra pas automatiquement d'être plus compréhensible. La documentation permet souvent d'être plus riche que des noms à rallonge.
 
 ### Getters <a id="Getters"></a>
 
 Go doesn't provide automatic support for getters and setters. There's nothing wrong with providing getters and setters yourself, and it's often appropriate to do so, but it's neither idiomatic nor necessary to put Get into the getter's name. If you have a field called owner (lower case, unexported), the getter method should be called Owner (upper case, exported), not GetOwner. The use of upper-case names for export provides the hook to discriminate the field from the method. A setter function, if needed, will likely be called SetOwner. Both names read well in practice:
+
+Go ne donne pas automatiquement des getteurs et setteurs. Il y a rien de mal à les créer soi-même et il semble normal d'en créer, mais il n'est pas idiomatique ni nécessaire d'ajouter **Get** dans le nom du getteur. Si vous avez un champs appelé **owner** (bas de casse : non exporté), la méthode getteur serait **Owner** (haut de casse : exporté) et non **GetOwner**. L'utilisation de la casse pour l'exportation permet de distinguer le champs de la méthode. Si nous avons besoin d'une fonction setteur, nous pourrions l'appeler **SetOwner**. Les deux noms se lisent facilement dans la pratique :
 
 ```go
 owner := obj.Owner()
@@ -250,39 +248,46 @@ if owner != user {
 
 ### Les noms d'interfaces <a id="Interfacenames"></a>
 
-By convention, one-method interfaces are named by the method name plus an -er suffix or similar modification to construct an agent noun: Reader, Writer, Formatter, CloseNotifier etc.
+Par convention, les interfaces de méthodes sont appelés par le nom de la méthode avec en plus le suffix **-er** ou une modification similaire pour créer un nom d'agent : **Reader**, **Writer**, **Formatter**, **CloseNotifier**... etc.
 
-There are a number of such names and it's productive to honor them and the function names they capture. Read, Write, Close, Flush, String and so on have canonical signatures and meanings. To avoid confusion, don't give your method one of those names unless it has the same signature and meaning. Conversely, if your type implements a method with the same meaning as a method on a well-known type, give it the same name and signature; call your string-converter method String not ToString.
+Il y a un certain nombre de ces noms et il est productif d'honorer cette règle pour permettre de distinguer les noms des fonctions. **Read**, **Write**, **Close**, **Flush**, **String** et ainsi de suite ont des signatures canoniques et des significations propre. Afin d'éviter toute confusion, ne donnez pas à votre méthode un de ces noms, sauf si elle a la même signature et signification. A l'inverse, si votre type implémente une méthode avec le même sens comme une méthode sur un type connu, donnez lui le même nom et la signature ; appelez votre méthode de conversion de chaîne **String** et non **ToString**.
 
 ### MélangesDeCasses <a id="MixedCaps"></a>
 
-Finally, the convention in Go is to use MixedCaps or mixedCaps rather than underscores to write multiword names.
+Pour finir, la convention en Go est d'utiliser le **CamelCase** ou **camelCase** au lieux des tirets afin d'écrire des expressions de mots composés.
 
 ## Les points virgules <a id="Semicolons"></a>
 
-Like C, Go's formal grammar uses semicolons to terminate statements, but unlike in C, those semicolons do not appear in the source. Instead the lexer uses a simple rule to insert semicolons automatically as it scans, so the input text is mostly free of them.
+Tous comme le C, Go utilise dans sa grammaire formelle le point virgule afin de finir une déclaration, mais contrairement au C, les points virgules n'apparaissent pas dans le code source. À la place le **lexer** utilise une règle simple permettant d'en insérer automatiquement au moment du balayage des sources, c'est pourquoi le texte exporté en est pratiquement viege.
 
-The rule is this. If the last token before a newline is an identifier (which includes words like int and float64), a basic literal such as a number or string constant, or one of the tokens
+La règle est la suivante : si le mot clée avant une nouvelle ligne est un identificateur (ce qui inclut les mots tel que ``int`` et ``float64``), une donnée littérale tel un nombre, une constante de chaîne ou un de ces mot clée :
 
+```go
 break continue fallthrough return ++ -- ) }
-the lexer always inserts a semicolon after the token. This could be summarized as, “if the newline comes after a token that could end a statement, insert a semicolon”.
+```
 
-A semicolon can also be omitted immediately before a closing brace, so a statement such as
+Le **lexer** insérera un point virgule à la fin du mot clée. Ce qui pourrait se résumer par : "si une nouvelle ligne viens après un mot clée qui pourrait être une déclaration, insère un point virgule".
+
+Un point virgule peut être aussi omit tout de suite après une accolade fermante. Ainsi la déclaration suivante n'a pas besoin de point virgules :
 
 ```go
     go func() { for { dst <- <-src } }()
 ```
 
-needs no semicolons. Idiomatic Go programs have semicolons only in places such as for loop clauses, to separate the initializer, condition, and continuation elements. They are also necessary to separate multiple statements on a line, should you write code that way.
+Les programmes idiomatiques en Go n'ont des points virugles que dans les boucles, afin de séparer l'initialiseur, la condition et l'élément de continuité. Ils sont aussi necessaire afin de permettre de séparer des déclarations multiple sur une seule ligne (non recommandé).
 
-One consequence of the semicolon insertion rules is that you cannot put the opening brace of a control structure (if, for, switch, or select) on the next line. If you do, a semicolon will be inserted before the brace, which could cause unwanted effects. Write them like this
+Une des conséquences des règles d'insertion des points virgules est qu'on ne peut pas mettre un retour de ligne avant une accolade ouvrante dans une structure de constrôle (``if``, ``for``, ``switch`` ou ``select``). Si vous le faites, un point virgule sera inséré juste après l'accolade, ce qui pourrait causer des effets non voulus.
+
+Il faut écrire de cette façon :
 
 ```go
 if i < f() {
     g()
 }
 ```
-not like this
+
+et pas comme ceci :
+
 ```go
 if i < f()  // wrong!
 {           // wrong!
