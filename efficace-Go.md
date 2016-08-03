@@ -65,7 +65,7 @@
 
 Go est un nouveau langage. Bien qu'il emprunte des idées à partir d'autres existants, il a des propriétés inhabituelles qui lui permet de réaliser des programmes éfficaces mais avec un caractère différent des programmes écrits de ses pairs. Une simple traduction d'un programme C++ ou Java en Go est peu susceptible de produire un résultat satisfaisant. Les programmes Java sont écrits en Java, pas en Go. D'un autre coté, réfléchir aux problèmes avec une vision Go permet de réaliser un programme réussi mais en tous cas assez différent. En d'autres termes pour écrire du Go, il est essentiel d'avoir compris ses propriétés et ses idiomes. Il est également important de connaître les conventions établies pour la programmation en Go, comme la dénomination, le formatage, la construction du programme, et ainsi de suite, de sorte que les programmes que vous écrivez seront facile à comprendre pour les autres programmeurs Go.
 
-Ce document donne des conseils pour l'écriture de code propre et idiomatique en Go. Il complète la [spécification du langage](https://golang.org/ref/spec), le [Tour de Go](https://tour.golang.org/) et [Comment écrire Code Go](https://golang.org/doc/code.html), tout ce dont vous devriez lire en premier.
+Ce document donne des conseils pour l'écriture de code propre et idiomatique en Go. Il complète la [spécification du langage](https://golang.org/ref/spec), le [Tour de Go](https://tour.golang.org/) et [Comment écrire du code Go](https://golang.org/doc/code.html), tout ce dont vous devriez lire en premier.
 
 ### Examples <a id="Examples"></a>
 
@@ -295,11 +295,11 @@ if i < f()  // wrong!
 
 ## Les structures de control  <a id="Controlstructures"></a>
 
-The control structures of Go are related to those of C but differ in important ways. There is no do or while loop, only a slightly generalized for; switch is more flexible; if and switch accept an optional initialization statement like that of for; break and continue statements take an optional label to identify what to break or continue; and there are new control structures including a type switch and a multiway communications multiplexer, select. The syntax is also slightly different: there are no parentheses and the bodies must always be brace-delimited.
+Les structures de contrôle en **Go** ressemblent à celles du **C** mais diffèrent dans de nombreux cas. Il n'y a pas de boucle ``while``, seulement une généralisation de la boucle ``for``, qui est plus fléxible. ``if`` et ``switch`` accèptent un paramètre optionnel d'initialisation tel que celui du ``for``. Les déclarations ``break`` et ``continue`` peuvent prendre un paramètre optionnel permettant de définir ce qui ``break`` et ``continue``. Il y a aussi une nouvelle structure de contrôle qui est un nouveau type de ``switch``, le ``select`` qui permet de multiplexer des communications multidirectionnel. La syntaxe est aussi un peut différente : il n'y a pas de parenthèses et le corp de la structure de contrôle doit toujours être délimité par des accolades.
 
 ### If <a id="If"></a>
 
-In Go a simple if looks like this:
+Dans Go un simple ``if`` ressemble a ça :
 
 ```go
 if x > 0 {
@@ -307,9 +307,9 @@ if x > 0 {
 }
 ```
 
-Mandatory braces encourage writing simple if statements on multiple lines. It's good style to do so anyway, especially when the body contains a control statement such as a return or break.
+L'obligation des accolades du ``if`` encouragent l'écriture de déclaration simple sur plusieurs lignes. C'est de toute façon un style plus lisible et ce tous particulièrement quand le corp de la structure de contrôle comporte des déclaration comme ``return`` ou ``break``.
 
-Since if and switch accept an initialization statement, it's common to see one used to set up a local variable.
+Sachant que ``if`` et ``switch`` acceptent tous deux une déclaration d'initialisation, il est commun les voir avec une création d'une variable local.
 
 ```go
 if err := file.Chmod(0664); err != nil {
@@ -318,17 +318,18 @@ if err := file.Chmod(0664); err != nil {
 }
 ```
 
-In the Go libraries, you'll find that when an if statement doesn't flow into the next statement—that is, the body ends in break, continue, goto, or return—the unnecessary else is omitted.
+Dans la librairie standard de Go, vous verrez que quand une instruction ``if`` ne circule pas dans le corp de la déclaration et qu'elle se termine en ``break``, ``continue``, ``goto``, ou ``return`` le ``else`` est omis.
+
 
 ```go
 f, err := os.Open(name)
 if err != nil {
     return err
 }
+codeUsing(f)
 ```
 
-codeUsing(f)
-This is an example of a common situation where code must guard against a sequence of error conditions. The code reads well if the successful flow of control runs down the page, eliminating error cases as they arise. Since error cases tend to end in return statements, the resulting code needs no else statements.
+Ceci est un exemple d'une situation commune où le code doit se prémunir contre une séquence de conditions d'erreur. Le code se lit bien si le déroulement réussi jusqu'en en bas de page, en éliminant les cas d'erreur à mesure qu'ils surviennent. Comme les cas d'erreurs ont tendance à se terminer dans des déclarations de retour, le code résultant n'a pas besoin de déclarations ``else``.
 
 ```go
 f, err := os.Open(name)
@@ -342,22 +343,27 @@ if err != nil {
 }
 codeUsing(f, d)
 ```
+
 ### Redeclaration et réaffectation <a id="Redeclarationandreassignment"></a>
 
 An aside: The last example in the previous section demonstrates a detail of how the := short declaration form works. The declaration that calls os.Open reads,
 
+```go
 f, err := os.Open(name)
+```
+
 This statement declares two variables, f and err. A few lines later, the call to f.Stat reads,
 
+```go
 d, err := f.Stat()
+```
+
 which looks as if it declares d and err. Notice, though, that err appears in both statements. This duplication is legal: err is declared by the first statement, but only re-assigned in the second. This means that the call to f.Stat uses the existing err variable declared above, and just gives it a new value.
 
 In a := declaration a variable v may appear even if it has already been declared, provided:
 
-this declaration is in the same scope as the existing declaration of v (if v is already declared in an outer scope, the declaration will create a new variable §),
-the corresponding value in the initialization is assignable to v, and
-there is at least one other variable in the declaration that is being declared anew.
-This unusual property is pure pragmatism, making it easy to use a single err value, for example, in a long if-else chain. You'll see it used often.
+this declaration is in the same scope as the existing declaration of v (if v is already declared in an outer scope, the declaration will create a new variable §), the corresponding value in the initialization is assignable to v, and
+there is at least one other variable in the declaration that is being declared anew. This unusual property is pure pragmatism, making it easy to use a single err value, for example, in a long if-else chain. You'll see it used often.
 
 § It's worth noting here that in Go the scope of function parameters and return values is the same as the function body, even though they appear lexically outside the braces that enclose the body.
 
