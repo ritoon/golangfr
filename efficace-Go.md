@@ -42,8 +42,8 @@
  - [Interface conversions et assertions de type](#Interfaceconversionsandtypeassertions)
  - [Généralité](#Generality)
  - [Interfaces et méthodes](#Interfacesandmethods)
-* [L'identifieur blanc](#Theblankidentifier)
- - [L'identifieur blanc dans une assignation multiple](#Theblankidentifierinmultipleassignment)
+* [L'identifiant vide](#Theblankidentifier)
+ - [L'identifiant vide dans une assignation multiple](#Theblankidentifierinmultipleassignment)
  - [Variables et imports non utilisés](#Unusedimportsandvariables)
  - [Importation pour des effets de bord](#Importforsideeffect)
  - [Validation d'interface](#Interfacechecks)
@@ -372,7 +372,7 @@ Cette propriété inhabituelle est pur pragmatisme, ce qui rend facile à utilis
 
 ### For <a id="For"></a>
 
-La boucle ``for`` et celle du **C** sont similaire mais pas identique. Elle unifie ``for`` et ``while``, et il n'y a pas de ``do-while``. Elle existe sous trois aspects, seulment un a des points virugles.
+La boucle ``for`` de **Go** et celle du **C** sont similaire mais pas identique. Elle unifie ``for`` et ``while``, et il n'y a pas de ``do-while``. Elle existe sous trois aspects, seulement une a des points virugles.
 
 ```go
 // Like a C for
@@ -450,7 +450,7 @@ for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
 
 ### Switch <a id="Switch"></a>
 
-Go's switch is more general than C's. The expressions need not be constants or even integers, the cases are evaluated top to bottom until a match is found, and if the switch has no expression it switches on true. It's therefore possible—and idiomatic—to write an if-else-if-else chain as a switch.
+Le ``switch`` de **Go** est plus ouvert que celui du **C**. Les expressions ne sont pas obligatoirement des constantes ou même des nombres entiers, les cas sont évalués de haut en bas jusqu'à ce qu'une correspondance soit trouvée. Si le ``switch`` n'a pas d'expression trouvée, il commute sur ``true``. Il est donc possible et idiomatique d'écrire une suite d'``if-else-if-else`` avec un ``switch``.
 
 ```go
 func unhex(c byte) byte {
@@ -466,7 +466,7 @@ func unhex(c byte) byte {
 }
 ```
 
-There is no automatic fall through, but cases can be presented in comma-separated lists.
+Il n'y a pas de sortie automatique, mais des cas peuvent être présentés dans des listes séparées par des virgules.
 
 ```go
 func shouldEscape(c byte) bool {
@@ -478,7 +478,7 @@ func shouldEscape(c byte) bool {
 }
 ```
 
-Although they are not nearly as common in Go as some other C-like languages, break statements can be used to terminate a switch early. Sometimes, though, it's necessary to break out of a surrounding loop, not the switch, and in Go that can be accomplished by putting a label on the loop and "breaking" to that label. This example shows both uses.
+Bien qu'ils ne sont pas aussi courant dans **Go** comme dans certains autres languages proches du **C**, la déclaration ``break`` peut être utilisés pour mettre fin à un ``switch`` de manière précoce. Cependant parfois, il est nécessaire de sortir d'une boucle parente, ce qui peut être accompli en mettant une étiquette sur la boucle et ainsi «casser» la boucle à cette étiquette. Cet exemple montre les deux utilisations :
 
 ```go
 Loop:
@@ -505,9 +505,9 @@ Loop:
 	}
 ```
 
-Of course, the continue statement also accepts an optional label but it applies only to loops.
+Bien sûr, l'instruction ``continue`` accepte également une étiquette facultative mais elle s'applique uniquement aux boucles.
 
-To close this section, here's a comparison routine for byte slices that uses two switch statements:
+Pour fermer cette section, voici une routine de comparaison pour les slices (tranches) d'octets qui utilise deux états de commutation :
 
 ```go
 // Compare returns an integer comparing the two byte slices,
@@ -534,7 +534,7 @@ func Compare(a, b []byte) int {
 
 ### Type switch <a id="Typeswitch"></a>
 
-A switch can also be used to discover the dynamic type of an interface variable. Such a type switch uses the syntax of a type assertion with the keyword type inside the parentheses. If the switch declares a variable in the expression, the variable will have the corresponding type in each clause. It's also idiomatic to reuse the name in such cases, in effect declaring a new variable with the same name but a different type in each case.
+Un ``switch`` peut également être utilisé pour découvrir le type dynamique d'une variable d'interface. Un tel ``switch`` de type utilise la syntaxe d'une assertion de type avec le type de mot-clé à l'intérieur des parenthèses. Si le ``switch`` déclare une variable dans l'expression, la variable aura le type correspondant dans chaque clause. Il est également idiomatique de réutiliser le nom dans de tels cas. Ce qui a pour effet de déclarer un nouvelle variable avec le même nom mais un type qui peut varier à chaque fois.
 
 ```go
 var t interface{}
@@ -1556,11 +1556,11 @@ When someone visits the page /args, the handler installed at that page has value
 
 In this section we have made an HTTP server from a struct, an integer, a channel, and a function, all because interfaces are just sets of methods, which can be defined for (almost) any type.
 
-## L'identifiant blanc <a id="Theblankidentifier"></a>
+## L'identifiant vide <a id="Theblankidentifier"></a>
 
 We've mentioned the blank identifier a couple of times now, in the context of for range loops and maps. The blank identifier can be assigned or declared with any value of any type, with the value discarded harmlessly. It's a bit like writing to the Unix /dev/null file: it represents a write-only value to be used as a place-holder where a variable is needed but the actual value is irrelevant. It has uses beyond those we've seen already.
 
-### L'identifiant blanc avec plusieurs valeurs d'affectation <a id="Theblankidentifierinmultipleassignment"></a>
+### L'identifiant vide avec plusieurs valeurs d'affectation <a id="Theblankidentifierinmultipleassignment"></a>
 
 The use of a blank identifier in a for range loop is a special case of a general situation: multiple assignment.
 
