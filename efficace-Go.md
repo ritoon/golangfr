@@ -557,14 +557,17 @@ case *int:
 
 ### Retours de multiples valeurs <a id="Multiplereturnvalues"></a>
 
-One of Go's unusual features is that functions and methods can return multiple values. This form can be used to improve on a couple of clumsy idioms in C programs: in-band error returns such as -1 for EOF and modifying an argument passed by address.
+L'une des caractéristiques inhabituelles de **Go** est que les fonctions et les méthodes peuvent renvoyer des valeurs multiples. Ce type de signature peut être utilisé pour améliorer quelques idiomes maladroits dans les programmes écrits en **C** : retours d'erreurs en bande tels que **-1** pour **EOF** et la modification d'un argument transmis par adresse.
 
-In C, a write error is signaled by a negative count with the error code secreted away in a volatile location. In Go, Write can return a count and an error: “Yes, you wrote some bytes but not all of them because you filled the device”. The signature of the Write method on files from package os is:
+En **C**, une erreur d'écriture est signalée par un nombre négatif avec le code d'erreur sécrétée loin dans un endroit instable. Dans **Go**, ``Write`` peut renvoyer un nombre et une erreur: "Oui, vous avez écrit quelques octets, mais pas tous d'entre eux parce que vous avez rempli l'équipement". La signature de la méthode ``Write`` sur les fichiers de package ``os`` est :
 
+```go
 func (file *File) Write(b []byte) (n int, err error)
-and as the documentation says, it returns the number of bytes written and a non-nil error when n != len(b). This is a common style; see the section on error handling for more examples.
+```
 
-A similar approach obviates the need to pass a pointer to a return value to simulate a reference parameter. Here's a simple-minded function to grab a number from a position in a byte slice, returning the number and the next position.
+et comme le dit la documentation, elle renvoie le nombre d'octets écrits et une erreur non nul lorsque ``n != len(b)``. Ceci est un style commun; voir la section sur la gestion des erreurs pour plus d'exemples.
+
+Une approche similaire évite la nécessité de passer un pointeur vers une valeur de retour pour simuler un paramètre de référence. Voici une fonction simpliste  pour prendre un certain nombre d'une position dans une tranche d'octets, retournant le nombre et la position suivante.
 
 ```go
 func nextInt(b []byte, i int) (int, int) {
@@ -578,7 +581,8 @@ func nextInt(b []byte, i int) (int, int) {
 }
 ```
 
-You could use it to scan the numbers in an input slice b like this:
+Vous pouvez l'utiliser pour analyser les nombres dans une entrée tranche ``b`` comme ceci :
+
 ```go
     for i := 0; i < len(b); {
         x, i = nextInt(b, i)
@@ -588,12 +592,15 @@ You could use it to scan the numbers in an input slice b like this:
 
 ### Les paramètres de retour nommés <a id="Namedresultparameters"></a>
 
-The return or result "parameters" of a Go function can be given names and used as regular variables, just like the incoming parameters. When named, they are initialized to the zero values for their types when the function begins; if the function executes a return statement with no arguments, the current values of the result parameters are used as the returned values.
+Le retour ou résultat "paramètres" d'une fonction **Go** peuvent être nommés et utilisés en tant que variables régulières, tout comme les paramètres entrants. Lorsque les retours sont nommés, ils sont initialisés aux valeurs zéro pour leurs types lorsque la fonction commence; si la fonction exécute une instruction de retour sans argument, les valeurs actuelles des paramètres de résultat sont utilisés comme les valeurs retournées.
 
-The names are not mandatory but they can make code shorter and clearer: they're documentation. If we name the results of nextInt it becomes obvious which returned int is which.
+Les noms ne sont pas obligatoires, mais ils peuvent rendre le code plus court et plus clair : ils sont la documentation. Si nous nommons les retours de ``nextInt`` il devient évident de savoir qui est qui.
 
+```go
 func nextInt(b []byte, pos int) (value, nextPos int) {
-Because named results are initialized and tied to an unadorned return, they can simplify as well as clarify. Here's a version of io.ReadFull that uses them well:
+```
+
+Parce que les résultats nommés sont initialisés et sans fioritures, ils peuvent simplifier ainsi que clarifier la lecture du code. Voici une version de ``io.ReadFull`` qui les utilise bien :
 
 ```go
 func ReadFull(r Reader, buf []byte) (n int, err error) {
@@ -610,6 +617,8 @@ func ReadFull(r Reader, buf []byte) (n int, err error) {
 ### Defer <a id="Defer"></a>
 
 Go's defer statement schedules a function call (the deferred function) to be run immediately before the function executing the defer returns. It's an unusual but effective way to deal with situations such as resources that must be released regardless of which path a function takes to return. The canonical examples are unlocking a mutex or closing a file.
+
+La déclaration ``defer`` de **Go** de reportent les calendriers de déclaration d'un appel de fonction (la fonction différée) pour être exécuté immédiatement avant la fonction d'exécution des déclarations de Defer. Il est une façon inhabituelle mais efficace pour faire face à des situations telles que des ressources qui doivent être libérés, peu importe quel chemin fonction prend pour revenir. Les exemples canoniques sont le déverrouillage d'un mutex ou la fermeture d'un fichier.
 
 ```go
 // Contents returns the file's contents as a string.
