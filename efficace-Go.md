@@ -346,26 +346,29 @@ codeUsing(f, d)
 
 ### Redeclaration et réaffectation <a id="Redeclarationandreassignment"></a>
 
-An aside: The last example in the previous section demonstrates a detail of how the := short declaration form works. The declaration that calls os.Open reads,
+En passant : Le dernier exemple de la section précédente montre un détail de la façon dont une déclaration courte ``:=`` est mise en œuvres. La déclaration qui appelle os.Open lit :
 
 ```go
 f, err := os.Open(name)
 ```
 
-This statement declares two variables, f and err. A few lines later, the call to f.Stat reads,
+Cette déclaration déclare deux variables, **f** et **err**. Quelques lignes plus tard, l'appel de f.Stat lit :
 
 ```go
 d, err := f.Stat()
 ```
 
-which looks as if it declares d and err. Notice, though, that err appears in both statements. This duplication is legal: err is declared by the first statement, but only re-assigned in the second. This means that the call to f.Stat uses the existing err variable declared above, and just gives it a new value.
+qui ressemble comme si elle déclare ``D`` et ``err``. Remarquez, cependant, que ``err`` apparaît dans les deux déclarations. Cette duplication est légal : ``err`` est créé par la première déclaration, mais est seulement réaffecté dans la seconde. Cela signifie que l'appel à ``f.Stat`` utilise la variable ``err`` existante déclarée ci-dessus, et juste lui donne une nouvelle valeur.
 
-In a := declaration a variable v may appear even if it has already been declared, provided:
+Dans une déclaration ``:=`` une variable ``v`` peut apparaître même si elle a déjà été déclarée, à condition :
 
-this declaration is in the same scope as the existing declaration of v (if v is already declared in an outer scope, the declaration will create a new variable §), the corresponding value in the initialization is assignable to v, and
-there is at least one other variable in the declaration that is being declared anew. This unusual property is pure pragmatism, making it easy to use a single err value, for example, in a long if-else chain. You'll see it used often.
+- que cette déclaration est dans la même portée que la déclaration existante de ``v`` (si ``v`` est déjà déclarée dans une portée externe, la déclaration va créer un nouvelle § variable),
+- la valeur correspondante dans l'initialisation est assignable à ``v``,
+- et il y a au moins une autre variable dans la déclaration qui est déclarée à nouveau.
 
-§ It's worth noting here that in Go the scope of function parameters and return values is the same as the function body, even though they appear lexically outside the braces that enclose the body.
+Cette propriété inhabituelle est pur pragmatisme, ce qui rend facile à utiliser une valeur ``err`` unique, par exemple, dans une longue suite d' ``if else``, vous la verrez souvent utilisé.
+
+§ Il est intéressant de noter ici que, la portée d'une fonction les paramètres et les valeurs de retour sont les même que le corps de la fonction, même si elles apparaissent lexicalement en dehors des accolades qui entourent le corps.
 
 ### For <a id="For"></a>
 
