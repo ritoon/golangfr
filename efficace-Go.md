@@ -6,7 +6,7 @@
 * [Commentaire](#Commentary)
 * [Nommage](#Names)
  - [Les noms de Package](#Packagenames)
- - [Getters](#Getters)
+ - [Getteurs](#Getters)
  - [Les noms d'interface](#Interfacenames)
  - [MélangeDeCasses](#MixedCaps)
 * [Les points-virgules](#Semicolons)
@@ -233,7 +233,7 @@ L'importateur d'un package utilisera le nom pour faire référence à son conten
 
 Un dernier cours exemple est **once.Do** ; **once.Do(setup)** se lit facilement et le fait d'écrire **once.DoOrWaitUntilDone(setup)** ne permettra pas automatiquement d'être plus compréhensible. La documentation permet souvent d'être plus riche que des noms à rallonge.
 
-### Getters <a id="Getters"></a>
+### Getteurs <a id="Getters"></a>
 
 Go ne donne pas automatiquement des getteurs et setteurs. Il y a rien de mal à les créer soi-même et il semble normal d'en créer, mais il n'est pas idiomatique ni nécessaire d'ajouter **Get** dans le nom du getteur. Si vous avez un champs appelé **owner** (bas de casse : non exporté), la méthode getteur serait **Owner** (haut de casse : exporté) et non **GetOwner**. L'utilisation de la casse pour l'exportation permet de distinguer le champs de la méthode. Si nous avons besoin d'une fonction setteur, nous pourrions l'appeler **SetOwner**. Les deux noms se lisent facilement dans la pratique :
 
@@ -346,33 +346,33 @@ codeUsing(f, d)
 
 ### Redeclaration et réaffectation <a id="Redeclarationandreassignment"></a>
 
-En passant : Le dernier exemple de la section précédente montre un détail de la façon dont une déclaration courte ``:=`` est mise en œuvres. La déclaration qui appelle os.Open lit :
+Nous pouvons préciser que le dernier exemple de la section précédente montre un détail de la façon dont une déclaration courte ``:=`` est mise en œuvres. La déclaration qui appelle ``os.Open`` lit :
 
 ```go
 f, err := os.Open(name)
 ```
 
-Cette déclaration déclare deux variables, **f** et **err**. Quelques lignes plus tard, l'appel de f.Stat lit :
+Cette déclaration déclare deux variables, ``f`` et ``err``. Quelques lignes plus tard, l'appel de ``f.Stat`` lit :
 
 ```go
 d, err := f.Stat()
 ```
 
-qui ressemble comme si elle déclare ``D`` et ``err``. Remarquez, cependant, que ``err`` apparaît dans les deux déclarations. Cette duplication est légal : ``err`` est créé par la première déclaration, mais est seulement réaffecté dans la seconde. Cela signifie que l'appel à ``f.Stat`` utilise la variable ``err`` existante déclarée ci-dessus, et juste lui donne une nouvelle valeur.
+qui ressemble comme si elle déclare ``d`` et ``err``. Remarquez, cependant, que ``err`` apparaît dans les deux déclarations. Cette duplication est légal : ``err`` est créé par la première déclaration, mais est seulement réaffecté dans la seconde. Cela signifie que l'appel à ``f.Stat`` utilise la variable ``err`` existante déclarée ci-dessus, et juste lui donne une nouvelle valeur.
 
 Dans une déclaration ``:=`` une variable ``v`` peut apparaître même si elle a déjà été déclarée, à condition :
 
-- que cette déclaration est dans la même portée que la déclaration existante de ``v`` (si ``v`` est déjà déclarée dans une portée externe, la déclaration va créer un nouvelle § variable),
+- que cette déclaration est dans la même portée que la déclaration existante de ``v`` (si ``v`` est déjà déclarée dans une portée externe, la déclaration va créer un nouvelle variable [1](#1)),
 - la valeur correspondante dans l'initialisation est assignable à ``v``,
 - et il y a au moins une autre variable dans la déclaration qui est déclarée à nouveau.
 
 Cette propriété inhabituelle est pur pragmatisme, ce qui rend facile à utiliser une valeur ``err`` unique, par exemple, dans une longue suite d' ``if else``, vous la verrez souvent utilisé.
 
-§ Il est intéressant de noter ici que, la portée d'une fonction les paramètres et les valeurs de retour sont les même que le corps de la fonction, même si elles apparaissent lexicalement en dehors des accolades qui entourent le corps.
+<a id="1">1 - </a>Il est intéressant de noter ici que, la portée d'une fonction les paramètres et les valeurs de retour sont les même que le corps de la fonction, même si elles apparaissent lexicalement en dehors des accolades qui entourent le corps.
 
 ### For <a id="For"></a>
 
-The Go for loop is similar to—but not the same as—C's. It unifies for and while and there is no do-while. There are three forms, only one of which has semicolons.
+La boucle ``for`` et celle du **C** sont similaire mais pas identique. Elle unifie ``for`` et ``while``, et il n'y a pas de ``do-while``. Elle existe sous trois aspects, seulment un a des points virugles.
 
 ```go
 // Like a C for
@@ -385,7 +385,7 @@ for condition { }
 for { }
 ```
 
-Short declarations make it easy to declare the index variable right in the loop.
+La déclaration courte permet la déclaration facile d'indexe de variable dirrectement dans la boucle.
 
 ```go
 sum := 0
@@ -394,7 +394,7 @@ for i := 0; i < 10; i++ {
 }
 ```
 
-If you're looping over an array, slice, string, or map, or reading from a channel, a range clause can manage the loop.
+Si vous bouclez dans un **tableau**, une **slice** (tranche), une **string**, une **map** ou que vous lisez dans une **channel** (canal), la clause ``range`` peut vous permettre de gérer la boucle.
 
 ```go
 for key, value := range oldMap {
@@ -402,7 +402,7 @@ for key, value := range oldMap {
 }
 ```
 
-If you only need the first item in the range (the key or index), drop the second:
+Si vous avez juste besoin du premier élément renvoyé par ``range`` (clée ou index), vous pouvez omettre le segond.
 
 ```go
 for key := range m {
@@ -412,7 +412,7 @@ for key := range m {
 }
 ```
 
-If you only need the second item in the range (the value), use the blank identifier, an underscore, to discard the first:
+Si vous avez uniquement besoin du segond, vous pouvez utiliser l'identifiant vide (``_``), afin de passer sous silence le premier :
 
 ```go
 sum := 0
@@ -421,16 +421,17 @@ for _, value := range array {
 }
 ```
 
-The blank identifier has many uses, as described in a later section.
+L'identifiant vide a beaucoup d'usages, nous reviendrons desssus dans une prochaine section.
 
-For strings, the range does more work for you, breaking out individual Unicode code points by parsing the UTF-8. Erroneous encodings consume one byte and produce the replacement rune U+FFFD. (The name (with associated builtin type) rune is Go terminology for a single Unicode code point. See the language specification for details.) The loop
+Pour les chaînes de caractères, ``range`` fait plus de travail pour vous, brisant les points de code **Unicode** individuels en analysant l'**UTF-8**. codages erronés consomment un octet et produisent la ``rune`` de remplacement **U+FFFD**. (Le nom (avec le type builtin associé) ``rune`` est une terminologie de **Go** pour un seul point de code Unicode. Voir la spécification du langage pour les détails.) La boucle :
 
 ```go
 for pos, char := range "日本\x80語" { // \x80 is an illegal UTF-8 encoding
     fmt.Printf("character %#U starts at byte position %d\n", char, pos)
 }
 ```
-prints
+affiche :
+
 ```sh
 character U+65E5 '日' starts at byte position 0
 character U+672C '本' starts at byte position 3
@@ -438,7 +439,8 @@ character U+FFFD '�' starts at byte position 6
 character U+8A9E '語' starts at byte position 7
 ```
 
-Finally, Go has no comma operator and ++ and -- are statements not expressions. Thus if you want to run multiple variables in a for you should use parallel assignment (although that precludes ++ and --).
+Enfin, Go n'a pas opérateur virgule deplus ``++`` et ``--`` sont des déclarations non des expressions. Ainsi, si vous voulez exécuter plusieurs variables en une vous devez utiliser l'affectation parallèle (bien que cela exclut ``++`` et ``--``).
+
 ```go
 // Reverse a
 for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
