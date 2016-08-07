@@ -616,9 +616,7 @@ func ReadFull(r Reader, buf []byte) (n int, err error) {
 
 ### Defer <a id="Defer"></a>
 
-Go's defer statement schedules a function call (the deferred function) to be run immediately before the function executing the defer returns. It's an unusual but effective way to deal with situations such as resources that must be released regardless of which path a function takes to return. The canonical examples are unlocking a mutex or closing a file.
-
-La déclaration ``defer`` de **Go** de reportent les calendriers de déclaration d'un appel de fonction (la fonction différée) pour être exécuté immédiatement avant la fonction d'exécution des déclarations de Defer. Il est une façon inhabituelle mais efficace pour faire face à des situations telles que des ressources qui doivent être libérés, peu importe quel chemin fonction prend pour revenir. Les exemples canoniques sont le déverrouillage d'un mutex ou la fermeture d'un fichier.
+La déclaration ``defer`` de **Go** permet de planifier un appel de fonction (fonction différée) qui est executé immédiatement avant le retour de la fonction le contenant. C'est un moyen inhabituelle mais efficace pour faire face à des situations tel que des ressources qui doivent être libérés, peu importe quel chemin la fonction a comme retour. Les cas d'usage les plus courants sont par exemple le déverrouillage d'un mutex ou la fermeture d'un fichier.
 
 ```go
 // Contents returns the file's contents as a string.
@@ -645,9 +643,10 @@ func Contents(filename string) (string, error) {
 }
 ```
 
-Deferring a call to a function such as Close has two advantages. First, it guarantees that you will never forget to close the file, a mistake that's easy to make if you later edit the function to add a new return path. Second, it means that the close sits near the open, which is much clearer than placing it at the end of the function.
+Différer un appel de fonction tel que ``Close`` a deux avantages. Tout d'abord, elle garantit de jamais oublier de fermer le fichier, une erreur qui est si facile à faire si vous modifiez ultérieurement la fonction. Deuxièmement, cela signifie que la fermeture se trouve à **proximité** de l'ouverture, ce qui est beaucoup plus clair que de le placer à la fin de la fonction.
 
-The arguments to the deferred function (which include the receiver if the function is a method) are evaluated when the defer executes, not when the call executes. Besides avoiding worries about variables changing values as the function executes, this means that a single deferred call site can defer multiple function executions. Here's a silly example.
+Les arguments de la fonction différée (qui comprennent le récepteur si la fonction est une méthode) sont évaluées lorsque le ``defer`` s'exécute, pas quand l'appel s'exécute. En plus d'éviter les soucis concernant les variables qui changent de valeurs lorsque la fonction s'exécute, ``defer`` permet d' exécuter une cascade de fonctions. Voici un exemple simpliste :
+
 
 ```go
 for i := 0; i < 5; i++ {
@@ -655,7 +654,8 @@ for i := 0; i < 5; i++ {
 }
 ```
 
-Deferred functions are executed in LIFO order, so this code will cause 4 3 2 1 0 to be printed when the function returns. A more plausible example is a simple way to trace function execution through the program. We could write a couple of simple tracing routines like this:
+Les fonctions différés sont exécutées dans l'ordre LIFO (last in first out), de sorte que ce code affichera 4 3 2 1 0 lors du retour de la fonction. Un exemple plus plausible est un moyen simple de tracer l'exécution de la fonction dans le programme. Nous pourrions écrire quelques routines de traçage simples comme ceci :
+
 
 ```go
 func trace(s string)   { fmt.Println("entering:", s) }
@@ -669,7 +669,7 @@ func a() {
 }
 ```
 
-We can do better by exploiting the fact that arguments to deferred functions are evaluated when the defer executes. The tracing routine can set up the argument to the untracing routine. This example:
+Nous pouvons faire mieux en exploitant le fait que les arguments des fonctions différées sont évaluées lorsque le ``defer`` s'exécute. La routine de traçage peut mettre en place l'argument à la routine ``untrace``. Tel que :
 
 ```go
 func trace(s string) string {
@@ -697,7 +697,7 @@ func main() {
 }
 ```
 
-prints
+affiche :
 
 ```sh
 entering: b
@@ -708,13 +708,17 @@ leaving: a
 leaving: b
 ```
 
-For programmers accustomed to block-level resource management from other languages, defer may seem peculiar, but its most interesting and powerful applications come precisely from the fact that it's not block-based but function-based. In the section on panic and recover we'll see another example of its possibilities.
+Pour les programmeurs habitués à des blocages au niveau la gestion des ressources dans d'autres langues, ``defer`` peut sembler étrange. Mais ses applications les plus intéressantes et les plus puissants viennent précisément du fait que cela ne repose pas sur un blocage, mais sur une fonction. Dans la section sur  ``panic`` et ``recover``, nous allons voir un autre exemple de ses  possibilités.
 
 ## Data <a id="Data"></a>
 
 ### L'Allocation avec new <a id="Allocationwithnew"></a>
 
 Go has two allocation primitives, the built-in functions new and make. They do different things and apply to different types, which can be confusing, but the rules are simple. Let's talk about new first. It's a built-in function that allocates memory, but unlike its namesakes in some other languages it does not initialize the memory, it only zeros it. That is, new(T) allocates zeroed storage for a new item of type T and returns its address, a value of type *T. In Go terminology, it returns a pointer to a newly allocated zero value of type T.
+
+Autrement dit, ``new(T)`` alloue zero stockage pour un nouvel élément de type ``T`` et retourne son adresse, une valeur de type ``*T``.
+
+**Go** a deux primitives d'allocation, les fonctions intégrées ``new`` et ``make``. Elles font des choses différentes et s'appliquent à différents types, ce qui peut être source de confusions, mais les règles sont simples. Parlons de ``new`` pour commencer, c'est une fonction intégrée qui alloue de la mémoire ; mais contrairement à ses homonymes dans d'autres langues ; il n'initialise pas la mémoire, il donne juste la valeur zéros du type. Autrement dit, ``new(T)`` alloue à zéro stockage pour un nouvel élément de type ``T`` et renvoie son adresse, une valeur de type ``*T``. Nous pouvons dire dans la terminologie **Go** : il renvoie un pointeur sur une valeur nouvellement allouée **nul** de type ``T``.
 
 Since the memory returned by new is zeroed, it's helpful to arrange when designing your data structures that the zero value of each type can be used without further initialization. This means a user of the data structure can create one with new and get right to work. For example, the documentation for bytes.Buffer states that "the zero value for Buffer is an empty buffer ready to use." Similarly, sync.Mutex does not have an explicit constructor or Init method. Instead, the zero value for a sync.Mutex is defined to be an unlocked mutex.
 
