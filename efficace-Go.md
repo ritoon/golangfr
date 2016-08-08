@@ -63,9 +63,9 @@
 
 ## Introduction <a id="Introduction"></a>
 
-Go est un nouveau langage. Bien qu'il emprunte des idées à partir d'autres existants, il a des propriétés inhabituelles qui lui permet de réaliser des programmes éfficaces mais avec un caractère différent des programmes écrits de ses pairs. Une simple traduction d'un programme C++ ou Java en Go est peu susceptible de produire un résultat satisfaisant. Les programmes Java sont écrits en Java, pas en Go. D'un autre coté, réfléchir aux problèmes avec une vision Go permet de réaliser un programme réussi mais en tous cas assez différent. En d'autres termes pour écrire du Go, il est essentiel d'avoir compris ses propriétés et ses idiomes. Il est également important de connaître les conventions établies pour la programmation en Go, comme la dénomination, le formatage, la construction du programme, et ainsi de suite, de sorte que les programmes que vous écrivez seront facile à comprendre pour les autres programmeurs Go.
+**Go** est un nouveau langage. Bien qu'il emprunte des idées à partir d'autres existants, il a des propriétés inhabituelles qui lui permet de réaliser des programmes éfficaces mais avec un caractère différent des programmes écrits de ses pairs. Une simple traduction d'un programme **C++** ou **Java** en **Go** est peu susceptible de produire un résultat satisfaisant. Les programmes Java sont écrits en **Java**, pas en **Go**. D'un autre coté, réfléchir aux problèmes avec une vision **Go** permet de réaliser un programme réussi mais en tous cas assez différent. En d'autres termes pour écrire du **Go**, il est essentiel d'avoir compris ses propriétés et ses idiomes. Il est également important de connaître les conventions établies pour la programmation en **Go**, comme la dénomination, le formatage, la construction du programme, et ainsi de suite, de sorte que les programmes que vous écrivez seront facile à comprendre pour les autres programmeurs **Go**.
 
-Ce document donne des conseils pour l'écriture de code propre et idiomatique en Go. Il complète la [spécification du langage](https://golang.org/ref/spec), le [Tour de Go](https://tour.golang.org/) et [Comment écrire du code Go](https://golang.org/doc/code.html), tout ce dont vous devriez lire en premier.
+Ce document donne des conseils pour l'écriture de code propre et idiomatique en **Go**. Il complète la [spécification du langage](https://golang.org/ref/spec), le [Tour de Go](https://tour.golang.org/) et [Comment écrire du code Go](https://golang.org/doc/code.html), tout ce dont vous devriez lire en premier.
 
 ### Examples <a id="Examples"></a>
 
@@ -76,9 +76,9 @@ Ce document donne des conseils pour l'écriture de code propre et idiomatique en
 
 les questions de mise en forme sont les plus litigieuses, mais aussi les moins conséquentes. Les gens peuvent s'adapter à différents styles de mise en forme, mais il est préférable qu'elles n'aient pas à le faire et que le moins de temps soit consacré à la question si tout le monde adhère au même style. Le problème est de savoir comment aborder cette Utopie sans une longue charte descriptive de style.
 
-Avec Go nous prenons une approche inhabituelle et laissons la machine prendre soin de la plupart des problèmes de formatage. Le programme **gofmt** (également disponible en tant que **go fmt** , qui fonctionne au niveau du paquet plutôt qu'au niveau du fichier source) lit un programme Go et émet la source dans un style standard d'indentation d'alignement vertical, de retenue et si nécessaire reformate les commentaires. Si vous voulez savoir comment gérer un nouveau type de mise en page,  exécutez **gofmt** ; si la réponse ne semble pas juste, réorganisez votre programme (ou déposer un bug à propos de **gofmt** ), mais ne passez pas plus de temps autour du problème.
+Avec **Go** nous prenons une approche inhabituelle et laissons la machine prendre soin de la plupart des problèmes de formatage. Le programme **gofmt** (également disponible en tant que ``go fmt`` , qui fonctionne au niveau du paquet plutôt qu'au niveau du fichier source) lit un programme **Go** et émet la source dans un style standard d'indentation d'alignement vertical, de retenue et si nécessaire reformate les commentaires. Si vous voulez savoir comment gérer un nouveau type de mise en page,  exécutez **gofmt** ; si la réponse ne semble pas juste, réorganisez votre programme (ou déposer un bug à propos de **gofmt** ), mais ne passez pas plus de temps autour du problème.
 
-A titre d'exemple , il n'y a pas besoin de passer du temps en alignant les commentaires sur les champs d'une structure. **Gofmt** va le faire pour vous. Compte tenu de la déclaration :
+A titre d'exemple , il n'y a pas besoin de passer du temps en alignant les commentaires sur les champs d'une structure. ``gofmt`` va le faire pour vous. Compte tenu de la déclaration :
 
 
 ```go
@@ -96,23 +96,23 @@ type T struct {
 }
 ```
 
-Tout le code Go dans les paquets standard a été formaté avec gofmt.
+Tout le code **Go** dans les paquets standard a été formaté avec ``gofmt``.
 
 
 Certains détails de mise en forme demeurent. Très brièvement :
 
 **Indentation**
 
-Nous utilisons des onglets pour l'indentation et gofmt les émet par défaut. Utilisez des espaces uniquement si vous devez.
+Nous utilisons des onglets pour l'indentation et ``gofmt`` les émet par défaut. Utilisez des espaces uniquement si vous devez.
 
 **Longueur de ligne**
 
-Go n'a pas de limite de longueur de ligne. Ne vous inquiétez pas de déborder sur votre carte perforée ! Si une ligne paraît trop longue, vous pouvez faire un retour à la ligne et une tabulation en supplémentaire.
+**Go** n'a pas de limite de longueur de ligne. Ne vous inquiétez pas de déborder sur votre carte perforée ! Si une ligne paraît trop longue, vous pouvez faire un retour à la ligne et une tabulation en supplémentaire.
 
 
 **Parentheses**
 
-Go a besoins de moins de parenthèses que le C et le Java : les structures de contrôle ( if, for, switch) ne disposent pas de parenthèses dans leur syntaxe. En outre, la hiérarchie des opérateurs de priorité est plus courte et plus claire, par conséquent
+**Go** a besoins de moins de parenthèses que le **C** et le **Java** : les structures de contrôle ( ``if``, ``for``, ``switch``) ne disposent pas de parenthèses dans leur syntaxe. En outre, la hiérarchie des opérateurs de priorité est plus courte et plus claire, par conséquent
 
 
 ```go
@@ -123,7 +123,7 @@ l'espacement est signifiant, contrairement aux autres languages.
 
 ## Les commentaires <a id="Commentary"></a>
 
-Go fournit des blocs de commentaires ```/ * * /``` au même titre que le C et le C++ et des commentaires en ligne ```//```. Les commentaires de ligne sont la norme ; les commentaires de bloc eux apparaissent surtout comme des commentaires du paquet, mais sont aussi utiles pour désactiver de larges pans de code.
+**Go** fournit des blocs de commentaires ```/ * * /``` au même titre que le **C** et le **C++** et des commentaires en ligne ```//```. Les commentaires de ligne sont la norme ; les commentaires de bloc eux apparaissent surtout comme des commentaires du paquet, mais sont aussi utiles pour désactiver de larges pans de code.
 
 Le programme et le serveur web **GoDoc** permet d'extraire des fichiers sources la documentation sur le contenu du paquet. Les commentaires qui apparaissent avant les déclarations de haut niveau, sans retour de ligne intermédiaires, sont extraits avec la déclaration pour servir de texte explicatif pour la documentation. La nature et le style de ces commentaires détermine la qualité de la documentation **GoDoc** produit.
 
@@ -180,7 +180,7 @@ Si le nom de package commence toujours par son commentaire, l'export dans **godo
 $ godoc regexp | grep parse
 ```
 
-Si tous les commentaires de la doc commançaient par : "This function...", grep ne pourrait pas aider pour se rappeler du nom. Mais parce que les paquets commencent chacuns par le commentaire avec le nom, vous verrez quelque chose de famillier, ce qui vous rappellera le mot que vous être entrain de chercher.
+Si tous les commentaires de la doc commançaient par : "This function...", ``grep`` ne pourrait pas aider pour se rappeler du nom. Mais parce que les paquets commencent chacuns par le commentaire avec le nom, vous verrez quelque chose de famillier, ce qui vous rappellera le mot que vous être entrain de chercher.
 
 ```sh
 $ godoc regexp | grep parse
@@ -190,7 +190,7 @@ $ godoc regexp | grep parse
 $
 ```
 
-Go permet de réaliser des groupement de déclaration. Un seul commentaire permet d'introduire un groupe de constantes ou variables associés. À partir du moment que ce commentaire groupé a été réalisé, les commentaires suivants peuvent être plus sommaires.
+**Go** permet de réaliser des groupement de déclaration. Un seul commentaire permet d'introduire un groupe de constantes ou variables associés. À partir du moment que ce commentaire groupé a été réalisé, les commentaires suivants peuvent être plus sommaires.
 
 ```go
 // Error codes returned by failures to parse an expression.
@@ -215,7 +215,7 @@ var (
 
 ## Nommage <a id="Names"></a>
 
-Les noms sont aussi imporants en Go que dans tous autres langages. Il y a même un effet sémantique : la visibilité d'une déclaration à l'extérieur du paquet est déterminé en fonction de sa première lettre en capitale. C'est pouquoi nous pouvons passer un peut de temps sur le sujet à savoir quels sont les conventions de nommage dans un programme Go ?
+Les noms sont aussi imporants en **Go** que dans tous autres langages. Il y a même un effet sémantique : la visibilité d'une déclaration à l'extérieur du paquet est déterminé en fonction de sa première lettre en capitale. C'est pouquoi nous pouvons passer un peut de temps sur le sujet à savoir quels sont les conventions de nommage dans un programme **Go** ?
 
 ### Les noms de paquets <a id="Packagenames"></a>
 
@@ -235,7 +235,7 @@ Un dernier cours exemple est **once.Do** ; **once.Do(setup)** se lit facilement 
 
 ### Getteurs <a id="Getters"></a>
 
-Go ne donne pas automatiquement des getteurs et setteurs. Il y a rien de mal à les créer soi-même et il semble normal d'en créer, mais il n'est pas idiomatique ni nécessaire d'ajouter **Get** dans le nom du getteur. Si vous avez un champs appelé **owner** (bas de casse : non exporté), la méthode getteur serait **Owner** (haut de casse : exporté) et non **GetOwner**. L'utilisation de la casse pour l'exportation permet de distinguer le champs de la méthode. Si nous avons besoin d'une fonction setteur, nous pourrions l'appeler **SetOwner**. Les deux noms se lisent facilement dans la pratique :
+**Go** ne donne pas automatiquement des getteurs et setteurs. Il y a rien de mal à les créer soi-même et il semble normal d'en créer, mais il n'est pas idiomatique ni nécessaire d'ajouter **Get** dans le nom du getteur. Si vous avez un champs appelé **owner** (bas de casse : non exporté), la méthode getteur serait **Owner** (haut de casse : exporté) et non **GetOwner**. L'utilisation de la casse pour l'exportation permet de distinguer le champs de la méthode. Si nous avons besoin d'une fonction setteur, nous pourrions l'appeler **SetOwner**. Les deux noms se lisent facilement dans la pratique :
 
 ```go
 owner := obj.Owner()
@@ -256,7 +256,7 @@ Pour finir, la convention en Go est d'utiliser le **CamelCase** ou **camelCase**
 
 ## Les points virgules <a id="Semicolons"></a>
 
-Tous comme le C, Go utilise dans sa grammaire formelle le point virgule afin de finir une déclaration, mais contrairement au C, les points virgules n'apparaissent pas dans le code source. À la place le **lexer** utilise une règle simple permettant d'en insérer automatiquement au moment du balayage des sources, c'est pourquoi le texte exporté en est pratiquement viege.
+Tous comme le **C**, **Go** utilise dans sa grammaire formelle le point virgule afin de finir une déclaration, mais contrairement au C, les points virgules n'apparaissent pas dans le code source. À la place le **lexer** utilise une règle simple permettant d'en insérer automatiquement au moment du balayage des sources, c'est pourquoi le texte exporté en est pratiquement viege.
 
 La règle est la suivante : si le mot clée avant une nouvelle ligne est un identificateur (ce qui inclut les mots tel que ``int`` et ``float64``), une donnée littérale tel un nombre, une constante de chaîne ou un de ces mot clée :
 
@@ -272,7 +272,7 @@ Un point virgule peut être aussi omit tout de suite après une accolade fermant
     go func() { for { dst <- <-src } }()
 ```
 
-Les programmes idiomatiques en Go n'ont des points virugles que dans les boucles, afin de séparer l'initialiseur, la condition et l'élément de continuité. Ils sont aussi necessaire afin de permettre de séparer des déclarations multiple sur une seule ligne (non recommandé).
+Les programmes idiomatiques en **Go** n'ont des points virugles que dans les boucles, afin de séparer l'initialiseur, la condition et l'élément de continuité. Ils sont aussi necessaire afin de permettre de séparer des déclarations multiple sur une seule ligne (non recommandé).
 
 Une des conséquences des règles d'insertion des points virgules est qu'on ne peut pas mettre un retour de ligne avant une accolade ouvrante dans une structure de constrôle (``if``, ``for``, ``switch`` ou ``select``). Si vous le faites, un point virgule sera inséré juste après l'accolade, ce qui pourrait causer des effets non voulus.
 
@@ -318,7 +318,7 @@ if err := file.Chmod(0664); err != nil {
 }
 ```
 
-Dans la librairie standard de Go, vous verrez que quand une instruction ``if`` ne circule pas dans le corp de la déclaration et qu'elle se termine en ``break``, ``continue``, ``goto``, ou ``return`` le ``else`` est omis.
+Dans la librairie standard de **Go**, vous verrez que quand une instruction ``if`` ne circule pas dans le corp de la déclaration et qu'elle se termine en ``break``, ``continue``, ``goto``, ou ``return`` le ``else`` est omis.
 
 
 ```go
@@ -439,7 +439,7 @@ character U+FFFD '�' starts at byte position 6
 character U+8A9E '語' starts at byte position 7
 ```
 
-Enfin, Go n'a pas opérateur virgule deplus ``++`` et ``--`` sont des déclarations non des expressions. Ainsi, si vous voulez exécuter plusieurs variables en une vous devez utiliser l'affectation parallèle (bien que cela exclut ``++`` et ``--``).
+Enfin, **Go** n'a pas opérateur virgule deplus ``++`` et ``--`` sont des déclarations non des expressions. Ainsi, si vous voulez exécuter plusieurs variables en une vous devez utiliser l'affectation parallèle (bien que cela exclut ``++`` et ``--``).
 
 ```go
 // Reverse a
@@ -790,12 +790,15 @@ m := map[int]string{Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
 
 ### Allocation avec make <a id="Allocationwithmake"></a>
 
-Back to allocation. The built-in function make(T, args) serves a purpose different from new(T). It creates slices, maps, and channels only, and it returns an initialized (not zeroed) value of type T (not *T). The reason for the distinction is that these three types represent, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data (inside an array), the length, and the capacity, and until those items are initialized, the slice is nil. For slices, maps, and channels, make initializes the internal data structure and prepares the value for use. For instance,
+Retour à l'allocation. La fonction intégré ``make(T, args)`` a des objectifs différents de ``new(T)``. Elle permet de créer des slices (tranches), des maps et des chanels (canaux) seulement et elle retourne une valeur initialisée (non mis à zéro) de type ``T`` (pas ``*T``). La raison de cette distinction est que ces trois types représentent, sous des couvertures, des références à des structures de données qui doivent être initialisées avant utilisation. Une slice, par exemple, est un descripteur de trois élément contenant un pointeur vers les données (dans un tableau), la longueur et la capacité. Jusqu'à ce que ces éléments soient initialisés, la slice est **nil**. Pour les slices, les maps et les chanels, ``make`` initialise la structure de données interne et prépare la valeur pour l'utilisation. Par exemple :
 
+```go
 make([]int, 10, 100)
-allocates an array of 100 ints and then creates a slice structure with length 10 and a capacity of 100 pointing at the first 10 elements of the array. (When making a slice, the capacity can be omitted; see the section on slices for more information.) In contrast, new([]int) returns a pointer to a newly allocated, zeroed slice structure, that is, a pointer to a nil slice value.
+```
 
-These examples illustrate the difference between new and make.
+alloue un tableau de 100 ints puis crée une structure de tranche de longueur 10 et une capacité de 100 pointant sur les 10 premiers éléments du tableau (Lorsque vous faites une slice, la capacité peut être omise. Voir la section sur les tranches pour plus d'informations). En revanche, ``new([] int)`` renvoie un pointeur sur une structure de tranche initialisé à sa valeur zéro nouvellement allouée, qui est un pointeur vers une valeur de tranche **nil**.
+
+Ces exemples illustrent la différence entre les ``new`` et ``make``.
 
 ```go
 var p *[]int = new([]int)       // allocates slice structure; *p == nil; rarely useful
@@ -809,18 +812,19 @@ var p *[]int = new([]int)
 v := make([]int, 100)
 ```
 
-Remember that make applies only to maps, slices and channels and does not return a pointer. To obtain an explicit pointer allocate with new or take the address of a variable explicitly.
+Rappelez-vous que ``make`` s'applique uniquement aux maps, des slices et aux  chanels et ne retourne pas un pointeur. Pour obtenir un pointeur explicite allouez à nouveau ou prennez l'adresse d'une variable explicitement.
 
 ### Tableaux <a id="Arrays"></a>
 
-Arrays are useful when planning the detailed layout of memory and sometimes can help avoid allocation, but primarily they are a building block for slices, the subject of the next section. To lay the foundation for that topic, here are a few words about arrays.
+Les tableaux sont utiles lors d'une planification méticuleuse de la mémoire et peuvent parfois aider à éviter des allocations inutiles. mais surtout ils sont un bloc de construction pour les tranches (slices), le sujet de la prochaine section. Pour jeter les bases de ce sujet, voici quelques mots sur les tableaux.
 
-There are major differences between the ways arrays work in Go and C. In Go,
+Il existe des différences majeurs entre les façons dont les tableaux fonctionnent entre le **Go** et le **C**. Dans **Go** :
 
-Arrays are values. Assigning one array to another copies all the elements.
-In particular, if you pass an array to a function, it will receive a copy of the array, not a pointer to it.
-The size of an array is part of its type. The types [10]int and [20]int are distinct.
-The value property can be useful but also expensive; if you want C-like behavior and efficiency, you can pass a pointer to the array.
+- Les tableaux sont des valeurs. l'Affectation d'un tableau à un autre copie tous les éléments.
+- En particulier, si vous passez un tableau à une fonction, il recevra une copie du tableau, pas un pointeur vers elle.
+- La taille d'un tableau fait partie de son type. Les types ``[10]int`` et ``int[20]`` sont distincts.
+- La propriété de la valeur peut être utile, mais aussi coûteuse ; si vous voulez le comportement et l'efficacité du **C**, vous pouvez passer un pointeur vers le tableau.
+
 
 ```go
 func Sum(a *[3]float64) (sum float64) {
@@ -834,22 +838,25 @@ array := [...]float64{7.0, 8.5, 9.1}
 x := Sum(&array)  // Note the explicit address-of operator
 ```
 
-But even this style isn't idiomatic Go. Use slices instead.
+Mais même ce style est pas idiomatique en **Go**. Utilisez des tranches (slices) à la place.
 
 ### Tranches (slices) <a id="Slices"></a>
 
-Slices wrap arrays to give a more general, powerful, and convenient interface to sequences of data. Except for items with explicit dimension such as transformation matrices, most array programming in Go is done with slices rather than simple arrays.
+Une **slice** enveloppent un tableau pour donner une interface plus générale, puissante et pratique à des séquences de données. À l'exception des éléments de dimension explicite telles que les matrices de transformation, la plupart des programmes de collection de données dans **Go** sont fait avec des tranches plutôt que de simples tableaux.
 
-Slices hold references to an underlying array, and if you assign one slice to another, both refer to the same array. If a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array. A Read function can therefore accept a slice argument rather than a pointer and a count; the length within the slice sets an upper limit of how much data to read. Here is the signature of the Read method of the File type in package os:
+Les **slices** détiennent les références à un tableau sous-jacent et si vous affectez une tranche à l'autre, les deux se réfèrent à la même matrice. Si une fonction prend un argument de **slice**, les modifications qu'elle apporte à des éléments de la tranche seront visible à l'appelant, ce qui est analogue à passer un pointeur vers le tableau sous-jacent. Une fonction ``Read`` peut donc accepter un argument de **slice** plutôt qu'un pointeur et un compteur ; la longueur dans la tranche fixe une limite supérieure de la quantité de données à lire. Voici la signature de la méthode ``Read`` du type de ``File`` dans le package ``os`` :
 
+```go
 func (f *File) Read(buf []byte) (n int, err error)
-The method returns the number of bytes read and an error value, if any. To read into the first 32 bytes of a larger buffer buf, slice (here used as a verb) the buffer.
+```
+
+La méthode retourne le nombre d'octets lus et une valeur d'erreur, le cas échéant. Pour lire dans les 32 premiers octets d'un plus grand tampon buf, tranche (ici utilisé comme un verbe) le buffer (tampon).
 
 ```go
 n, err := f.Read(buf[0:32])
 ```
 
-Such slicing is common and efficient. In fact, leaving efficiency aside for the moment, the following snippet would also read the first 32 bytes of the buffer.
+Ce **"slicing"** (découpage ou tranchage) est commune et efficace. En fait, en laissant l'efficacité de côté, l'extrait suivant lirait également les 32 premiers octets de la mémoire tampon.
 
 ```go
     var n int
@@ -864,7 +871,7 @@ Such slicing is common and efficient. In fact, leaving efficiency aside for the 
     }
 ```
 
-The length of a slice may be changed as long as it still fits within the limits of the underlying array; just assign it to a slice of itself. The capacity of a slice, accessible by the built-in function cap, reports the maximum length the slice may assume. Here is a function to append data to a slice. If the data exceeds the capacity, the slice is reallocated. The resulting slice is returned. The function uses the fact that len and cap are legal when applied to the nil slice, and return 0.
+La longueur d'une tranche peut être modifiée aussi longtemps qu'elle se glisse dans les limites de la matrice sous-jacente ; il faut juste assigner à une **slice** à elle-même. La capacité d'une tranche, accessible par la fonction intégrée ``cap()``, rapporte la longueur maximale que la tranche peut assumer. Voici une fonction pour ajouter des données à une tranche. Si les données dépassent la capacité, la tranche est réattribué. La tranche résultante est renvoyée. La fonction utilise le fait que ``len`` et ``cap`` sont légaux lorsqu'elle est appliquée à une **slice** ``nil`` et retourne ainsi ``0``.
 
 ```go
 func Append(slice, data []byte) []byte {
@@ -884,13 +891,14 @@ func Append(slice, data []byte) []byte {
 }
 ```
 
-We must return the slice afterwards because, although Append can modify the elements of slice, the slice itself (the run-time data structure holding the pointer, length, and capacity) is passed by value.
+Nous devons retourner la **slice** ensuite parce que, bien que ``Append`` peut modifie les éléments de la **slice**, la **slice** elle-même (la structure de données d'exécution tenant le pointeur, la longueur et la capacité) est passé par valeur.
 
-The idea of appending to a slice is so useful it's captured by the append built-in function. To understand that function's design, though, we need a little more information, so we'll return to it later.
+L'idée d'ajouter des éléments dans une tranche est si utile, que **Go** a une fonction intégrée ``append``. Pour comprendre la conception de cette fonction, cependant, nous avons besoin d'un peu plus d'informations, donc nous y reviendrons plus tard.
 
 ### Les tranches (slices) à deux dimensions <a id="Two-dimensionalslices"></a>
 
 Go's arrays and slices are one-dimensional. To create the equivalent of a 2D array or slice, it is necessary to define an array-of-arrays or slice-of-slices, like this:
+
 ```go
 type Transform [3][3]float64  // A 3x3 array, really an array of arrays.
 type LinesOfText [][]byte     // A slice of byte slices.
@@ -916,6 +924,7 @@ for i := range picture {
 	picture[i] = make([]uint8, XSize)
 }
 ```
+
 And now as one allocation, sliced into lines:
 
 ```go
