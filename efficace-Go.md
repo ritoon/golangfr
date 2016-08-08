@@ -714,15 +714,11 @@ Pour les programmeurs habitués à des blocages au niveau la gestion des ressour
 
 ### L'Allocation avec new <a id="Allocationwithnew"></a>
 
-Go has two allocation primitives, the built-in functions new and make. They do different things and apply to different types, which can be confusing, but the rules are simple. Let's talk about new first. It's a built-in function that allocates memory, but unlike its namesakes in some other languages it does not initialize the memory, it only zeros it. That is, new(T) allocates zeroed storage for a new item of type T and returns its address, a value of type *T. In Go terminology, it returns a pointer to a newly allocated zero value of type T.
+**Go** a deux primitives d'allocation, les fonctions intégrées ``new`` et ``make``. Elles font des choses différentes et s'appliquent à différents types, ce qui peut être source de confusions, mais les règles sont simples. Parlons de ``new`` pour commencer, c'est une fonction intégrée qui alloue de la mémoire ; mais contrairement à ses homonymes dans d'autres langues ; il n'initialise pas la mémoire, il donne juste la valeur zéros du type. Autrement dit, ``new(T)`` alloue un stockage pour un nouvel élément de type ``T``, lui donne sa valeur zéro et retourne son adresse, une valeur de type ``*T``. Nous pouvons dire dans la terminologie **Go** : il renvoie un pointeur sur une valeur nouvellement allouée **nul** de type ``T``.
 
-Autrement dit, ``new(T)`` alloue zero stockage pour un nouvel élément de type ``T`` et retourne son adresse, une valeur de type ``*T``.
+À partir du moment où ``new`` renvoie une valeur initialisé à sa valeur zéro, il est utile d'organiser la conception de vos structures de données avec une valeur zéro de chaque type qui peut être utilisé sans plus de travail d'initialisation. Cela signifie qu'un utilisateur de la structure de données peut créer une variable avec ``new`` qui est prêt à l'emploie. Par exemple, la documentation ``bytes.Buffer`` indique que "la valeur zéro pour le tampon est un tampon vide prêt à l'emploi." De même, ``sync.Mutex`` n'a pas de constructeur explicite ou méthode ``Init``. Au lieu de cela, la valeur zéro pour un ``sync.Mutex`` est défini comme étant un mutex déverrouillé.
 
-**Go** a deux primitives d'allocation, les fonctions intégrées ``new`` et ``make``. Elles font des choses différentes et s'appliquent à différents types, ce qui peut être source de confusions, mais les règles sont simples. Parlons de ``new`` pour commencer, c'est une fonction intégrée qui alloue de la mémoire ; mais contrairement à ses homonymes dans d'autres langues ; il n'initialise pas la mémoire, il donne juste la valeur zéros du type. Autrement dit, ``new(T)`` alloue à zéro stockage pour un nouvel élément de type ``T`` et renvoie son adresse, une valeur de type ``*T``. Nous pouvons dire dans la terminologie **Go** : il renvoie un pointeur sur une valeur nouvellement allouée **nul** de type ``T``.
-
-Since the memory returned by new is zeroed, it's helpful to arrange when designing your data structures that the zero value of each type can be used without further initialization. This means a user of the data structure can create one with new and get right to work. For example, the documentation for bytes.Buffer states that "the zero value for Buffer is an empty buffer ready to use." Similarly, sync.Mutex does not have an explicit constructor or Init method. Instead, the zero value for a sync.Mutex is defined to be an unlocked mutex.
-
-The zero-value-is-useful property works transitively. Consider this type declaration.
+La valeur zéro est une utile propriété qui fonctionne de manière transitive. Considérez cette déclaration de type :
 
 ```go
 type SyncedBuffer struct {
@@ -731,7 +727,7 @@ type SyncedBuffer struct {
 }
 ```
 
-Values of type SyncedBuffer are also ready to use immediately upon allocation or just declaration. In the next snippet, both p and v will work correctly without further arrangement.
+Les valeurs de type ``SyncedBuffer`` sont également immédiatement prêtes à l'utilisation après l'attribution ou juste la déclaration. Dans le prochain extrait, ``p`` et ``v`` fonctionneront correctement sans autre arrangement.
 
 ```go
 p := new(SyncedBuffer)  // type *SyncedBuffer
@@ -740,7 +736,7 @@ var v SyncedBuffer      // type  SyncedBuffer
 
 ### Constructeur et composite littéreaux <a id="Constructorsandcompositeliterals"></a>
 
-Sometimes the zero value isn't good enough and an initializing constructor is necessary, as in this example derived from package os.
+Parfois, la valeur zéro n'est pas suffisante et un constructeur initialisant est nécessaire, comme dans cet exemple dérivé de package **os**.
 
 ```go
 func NewFile(fd int, name string) *File {
@@ -756,7 +752,7 @@ func NewFile(fd int, name string) *File {
 }
 ```
 
-There's a lot of boiler plate in there. We can simplify it using a composite literal, which is an expression that creates a new instance each time it is evaluated.
+Il y a beaucoup de petites tâches dans la fonction ``NewFile``. Nous pouvons la simplifier avec l'utilisation d'une littérale composite, qui est une expression qui crée une nouvelle instance à chaque fois qu'elle est évalué.
 
 ```go
 func NewFile(fd int, name string) *File {
@@ -768,21 +764,23 @@ func NewFile(fd int, name string) *File {
 }
 ```
 
-Note that, unlike in C, it's perfectly OK to return the address of a local variable; the storage associated with the variable survives after the function returns. In fact, taking the address of a composite literal allocates a fresh instance each time it is evaluated, so we can combine these last two lines.
+Notez que, contrairement à **C**, il est parfaitement **OK** de renvoyer l'adresse d'une variable locale ; le stockage associé à la variable survit après le retour de la fonction. En fait, en prenant l'adresse d'un littéral composite, **Go** alloue une nouvelle instance à chaque fois qu'il l'évalue, donc nous pouvons combiner ces deux dernières lignes :
 
 ```go
 return &File{fd, name, nil, 0}
 ```
 
-The fields of a composite literal are laid out in order and must all be present. However, by labeling the elements explicitly as field:value pairs, the initializers can appear in any order, with the missing ones left as their respective zero values. Thus we could say
+Les champs d'un littéral composite sont disposées en ordre et doivent tous être présents. Cependant, en étiquetant les éléments explicitement comme des paires ``champ:valeurs``, les initialiseurs peuvent apparaître dans un ordre quelconque. Nous pouvons, de plus, omettre un champ qui prend sa valeur zéro par défaut. Ainsi pourrait-on dire :
 
 ```go
 return &File{fd: fd, name: name}
 ```
 
-As a limiting case, if a composite literal contains no fields at all, it creates a zero value for the type. The expressions new(File) and &File{} are equivalent.
+Comme un cas limite, si un littéral composite ne contient pas de champs du tout, il crée une valeur zéro pour le type. Les expressions ``new(File)`` et de ``&File{}`` sont équivalentes.
 
 Composite literals can also be created for arrays, slices, and maps, with the field labels being indices or map keys as appropriate. In these examples, the initializations work regardless of the values of Enone, Eio, and Einval, as long as they are distinct.
+
+Les composites littéraux peuvent également être créés pour les **tableaux**, les **slices** et les **maps**, avec les étiquettes de champ étant des indices ou des clés de la carte, le cas échéant. Dans ces exemples, les initialisations fonctionnent quelles que soient les valeurs de énone, EIO, EINVAL, tant qu'ils sont distincts.
 
 ```go
 a := [...]string   {Enone: "no error", Eio: "Eio", Einval: "invalid argument"}
