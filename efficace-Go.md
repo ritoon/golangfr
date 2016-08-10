@@ -899,12 +899,14 @@ L'idée d'ajouter des éléments dans une tranche est si utile, que **Go** a une
 
 Go's arrays and slices are one-dimensional. To create the equivalent of a 2D array or slice, it is necessary to define an array-of-arrays or slice-of-slices, like this:
 
+les **tableaux** et les **slices** **Go** sont unidimensionnels. Pour créer l'équivalent d'un tableau 2D ou une tranche, il est nécessaire de définir un tableau detableaux ou une slice de slice, comme ceci :
+
 ```go
 type Transform [3][3]float64  // A 3x3 array, really an array of arrays.
 type LinesOfText [][]byte     // A slice of byte slices.
 ```
 
-Because slices are variable-length, it is possible to have each inner slice be a different length. That can be a common situation, as in our LinesOfText example: each line has an independent length.
+Parce que les **slices** sont de longueur variable, il est possible d'avoir chaque tranche intérieure qui soit d'une longueur différente. Cela peut être une situation courante, comme dans l'exemple avec du texte: chaque ligne a une longueur indépendante.
 
 ```go
 text := LinesOfText{
@@ -914,7 +916,7 @@ text := LinesOfText{
 }
 ```
 
-Sometimes it's necessary to allocate a 2D slice, a situation that can arise when processing scan lines of pixels, for instance. There are two ways to achieve this. One is to allocate each slice independently; the other is to allocate a single array and point the individual slices into it. Which to use depends on your application. If the slices might grow or shrink, they should be allocated independently to avoid overwriting the next line; if not, it can be more efficient to construct the object with a single allocation. For reference, here are sketches of the two methods. First, a line at a time:
+Parfois, il est nécessaire d'allouer une **slice** 2D, une situation qui peut survenir lors du traitement des lignes de balayage de pixels, par exemple. Il y a deux façons d'y parvenir. La première consiste à allouer chaque **slices** de façon indépendante ; l'autre est d'affecter un seul tableau et pointer les tranches individuelles entre elles. Le choix entre les deux dépend de votre application. Si les **slices** sont suseptible d'augmenter ou diminuer de taille, ils devraient être allouées de façon indépendante pour éviter d'écraser la ligne suivante ; sinon, il peut être plus efficace pour construire l'objet d'une seule allocation. Pour référence, voici des esquisses des deux méthodes. D'abord, une ligne à la fois :
 
 ```go
 // Allocate the top-level slice.
@@ -925,7 +927,7 @@ for i := range picture {
 }
 ```
 
-And now as one allocation, sliced into lines:
+Et maintenant avec une allocation, **slicé** en lignes :
 
 ```go
 // Allocate the top-level slice, the same as before.
@@ -940,9 +942,9 @@ for i := range picture {
 
 ### Les cartes (maps) <a id="Maps"></a>
 
-Maps are a convenient and powerful built-in data structure that associate values of one type (the key) with values of another type (the element or value) The key can be of any type for which the equality operator is defined, such as integers, floating point and complex numbers, strings, pointers, interfaces (as long as the dynamic type supports equality), structs and arrays. Slices cannot be used as map keys, because equality is not defined on them. Like slices, maps hold references to an underlying data structure. If you pass a map to a function that changes the contents of the map, the changes will be visible in the caller.
+Les **maps** sont un moyen pratique et puissant de collection de données qui associent des valeurs d'un type (la clé) avec des valeurs d'un autre type (l'élément ou de la valeur). La clé peut être de tout type pour lequel l'opérateur d'égalité est définie, tels que des entiers, nombres flottants et nombres complexes, des chaînes, des pointeurs, des interfaces (aussi longtemps que le type dynamique soutient l'égalité), les structures et les tableaux. Les **slices** ne peuvent pas être utilisées comme clés dans une **map**, parce que l'égalité ne se définit pas sur eux. Comme les **slices**, les **maps** détiennent des références à une structure de données sous-jacente. Si vous passez une map à une fonction qui modifie le contenu de la carte, les changements seront visibles dans l'appelant.
 
-Maps can be constructed using the usual composite literal syntax with colon-separated key-value pairs, so it's easy to build them during initialization.
+Les **maps** peuvent être construits en utilisant la syntaxe littérale composite habituelle avec des paires clé-valeur séparés par deux points, il est donc facile de les construire pendant l'initialisation.
 
 ```go
 var timeZone = map[string]int{
@@ -954,13 +956,13 @@ var timeZone = map[string]int{
 }
 ```
 
-Assigning and fetching map values looks syntactically just like doing the same for arrays and slices except that the index doesn't need to be an integer.
+Assigner et aller chercher des valeurs d'une **map** ressemble syntaxiquement aux **tableaux** et aux **slices**, sauf que l'indice n'a pas besoin d'être un nombre entier.
 
 ```go
 offset := timeZone["EST"]
 ```
 
-An attempt to fetch a map value with a key that is not present in the map will return the zero value for the type of the entries in the map. For instance, if the map contains integers, looking up a non-existent key will return 0. A set can be implemented as a map with value type bool. Set the map entry to true to put the value in the set, and then test it by simple indexing.
+Une tentative de chercher une valeur de la **map** avec une clé qui ne figure pas sur la **map** sera de retour la valeur zéro pour le type des entrées de la **map**. Par exemple, si la **map** contient des nombres entiers, regardant une clé non existante le retour sera 0. Un ensemble peut être mis en œuvre comme une **map** avec le type de valeur bool. Réglez la **map** d'entrée sur true pour mettre la valeur dans l'ensemble, puis le tester par simple indexation.
 
 ```go
 attended := map[string]bool{
@@ -974,7 +976,7 @@ if attended[person] { // will be false if person is not in the map
 }
 ```
 
-Sometimes you need to distinguish a missing entry from a zero value. Is there an entry for "UTC" or is that the empty string because it's not in the map at all? You can discriminate with a form of multiple assignment.
+Parfois vous avez besoin de distinguer une entrée manquante d'une valeur nulle. Y at-il une entrée pour «UTC» ou est-ce que la chaîne vide, car il est pas dans la **map** du tout ? Vous pouvez distinguer avec une forme d'affectation multiple.
 
 ```go
 var seconds int
@@ -982,7 +984,7 @@ var ok bool
 seconds, ok = timeZone[tz]
 ```
 
-For obvious reasons this is called the “comma ok” idiom. In this example, if tz is present, seconds will be set appropriately and ok will be true; if not, seconds will be set to zero and ok will be false. Here's a function that puts it together with a nice error report:
+Pour des raisons "évidentes", cet idiome est appelé la **"virgule ok"**. Dans cet exemple, si ``tz`` est présent, ``seconds`` sera réglés de façon appropriée et ``ok`` renverra à ``true``; sinon, ``seconds`` reverra sa valeur zéro et ok sera initialisé à ``false``. Voici une fonction qui joue un ensemble avec un rapport d'erreur :
 
 ```go
 func offset(tz string) int {
@@ -994,13 +996,13 @@ func offset(tz string) int {
 }
 ```
 
-To test for presence in the map without worrying about the actual value, you can use the blank identifier (_) in place of the usual variable for the value.
+Pour tester la présence dans la **map** sans se soucier de la valeur réelle, vous pouvez utiliser l'identificateur vide ``_`` à la place de la variable habituelle pour la valeur.
 
 ```go
 _, present := timeZone[tz]
 ```
 
-To delete a map entry, use the delete built-in function, whose arguments are the map and the key to be deleted. It's safe to do this even if the key is already absent from the map.
+Pour supprimer une entrée de la **map**, utilisez la fonction intégrée ``delete``, dont les arguments sont la **map** et sa clé à supprimer. La suppression est sécurisée même si la clé est déjà absent de la **map**.
 
 ```go
 delete(timeZone, "PDT")  // Now on Standard Time
