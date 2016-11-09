@@ -24,7 +24,7 @@ Nous allons commencer par un simple exemple de pipeline pour expliquer les idée
 
 Considérons un pipeline à trois étapes.
 
-La première étape, gen, est une fonction qui convertit une liste d'entiers en un canal qui émet les entiers dans la liste. La fonction gen démarre un goroutine qui envoie les entiers sur le canal et ferme le canal lorsque toutes les valeurs ont été envoyées:
+La première étape **gen**, qui est une fonction qui convertit une liste d'entiers en un canal et émet les entiers dans la liste. La fonction **gen** démarre une goroutine qui envoie les entiers sur le canal et ferme le canal lorsque toutes les valeurs ont été envoyées :
 
 ```go
 func gen(nums ...int) <-chan int {
@@ -39,7 +39,7 @@ func gen(nums ...int) <-chan int {
 }
 ```
 
-La deuxième étape, sq, reçoit des entiers d'un canal et renvoie un canal qui émet le carré de chaque entier reçu. Une fois que le canal entrant est fermé et que cette étape a envoyé toutes les valeurs en aval, il ferme le canal sortant:
+La deuxième étape **sq**, qui reçoit des entiers d'un canal et renvoie un canal qui émet le carré de chaque entier reçu. Une fois que le canal entrant est fermé et que cette étape a envoyé toutes les valeurs en aval, il ferme le canal sortant :
 
 ```go
 func sq(in <-chan int) <-chan int {
@@ -54,7 +54,7 @@ func sq(in <-chan int) <-chan int {
 }
 ```
 
-La fonction principale configure le pipeline et exécute l'étape finale: elle reçoit les valeurs de la deuxième étape et imprime chacune d'elles, jusqu'à ce que le canal soit fermé:
+La fonction **main** configure le pipeline et exécute l'étape finale: elle reçoit les valeurs de la deuxième étape et imprime chacune d'elles, jusqu'à ce que le canal soit fermé :
 
 ```go
 func main() {
@@ -68,7 +68,7 @@ func main() {
 }
 ```
 
-Puisque sq a le même type pour ses canaux entrants et sortants, nous pouvons le composer n'importe quel nombre de fois. Nous pouvons également réécrire main comme une boucle de plage, comme les autres étapes:
+Puisque **sq** a le même type pour ses canaux entrants et sortants, nous pouvons le composer n'importe quel nombre de fois. Nous pouvons également réécrire **main** comme une boucle de plage, comme les autres étapes :
 
 ```go
 func main() {
@@ -85,7 +85,7 @@ Plusieurs fonctions peuvent lire à partir du même canal jusqu'à ce que ce can
 
 Une fonction peut lire à partir de plusieurs entrées et continuer jusqu'à ce que toutes soient fermées en multiplexant les canaux d'entrée sur un seul canal fermé lorsque toutes les entrées sont fermées. C'est ce qu'on appelle le **fan-in**.
 
-Nous pouvons changer notre pipeline pour exécuter deux instances de sql, chaque lecture du même canal d'entrée. Nous introduisons une nouvelle fonction, fusionner, pour ventiler dans les résultats:
+Nous pouvons changer notre pipeline pour exécuter deux instances de **sql**, chaque lecture du même canal d'entrée. Nous introduisons une nouvelle fonction, fusionner, pour ventiler dans les résultats :
 
 ```go
 func main() {
@@ -104,7 +104,7 @@ func main() {
 
 La fonction **merge** convertit une liste de canaux en un canal unique en commençant une goroutine pour chaque canal entrant qui copie les valeurs au seul canal sortant. Une fois que toutes les goroutines de sortie ont été démarrées, le **merge** démarre une autre goroutine pour fermer le canal sortant après que tous les envois sur ce canal soient terminés.
 
-Un envoie panique sur un canal fermé, il est donc important de s'assurer que tous les envois sont effectués avant d'appeler le **close**. Le type **sync.WaitGroup** fournit un moyen simple d'organiser cette synchronisation:
+Un envoie panique sur un canal fermé, il est donc important de s'assurer que tous les envois sont effectués avant d'appeler le **close**. Le type **sync.WaitGroup** fournit un moyen simple d'organiser cette synchronisation :
 
 
 ```go
@@ -137,7 +137,7 @@ func merge(cs ...<-chan int) <-chan int {
 
 ###Arrêt écourté
 
-Il existe un modèle pour nos fonctions de pipeline:
+Il existe un modèle pour nos fonctions de pipeline :
 
 - étapes qui ferment les canaux sortants lorsque toutes les opérations d'envoi sont effectuées.
 - étapes qui continuent de recevoir des valeurs des canaux entrants jusqu'à ce que ces canaux soient fermés.
@@ -146,7 +146,7 @@ Ce modèle permet à chaque étape de réception d'être écrite comme une boucl
 
 Mais dans les pipelines réels, les étapes ne reçoivent pas toujours toutes les valeurs entrantes. Parfois, c'est par conception: le récepteur n'a besoin que d'un sous-ensemble de valeurs pour progresser. Plus souvent, une étape sort plus tôt car une valeur entrante représente une erreur dans une étape antérieure. Dans les deux cas, le récepteur ne devrait pas avoir à attendre que les valeurs restantes arrivent, et nous voulons que les étapes précédentes arrêtent de produire des valeurs dont les étapes ultérieures n'ont pas besoin.
 
-Dans notre pipeline d'exemple, si une étape ne consomme pas toutes les valeurs entrantes, les goroutines essayant d'envoyer ces valeurs bloqueront indéfiniment:
+Dans notre pipeline d'exemple, si une étape ne consomme pas toutes les valeurs entrantes, les goroutines essayant d'envoyer ces valeurs bloqueront indéfiniment :
 
 ```go
     // Consume the first value from output.
@@ -159,16 +159,16 @@ Dans notre pipeline d'exemple, si une étape ne consomme pas toutes les valeurs 
 ```
 Il s'agit d'une fuite de ressources: les goroutines consomment de la mémoire et des ressources d'exécution, et les références de tas dans les piles de goroutine empêchent les données d'être collectées. Les goroutines ne sont pas garbage collectées; Ils doivent sortir seuls.
 
-Nous devons prendre des dispositions pour que les étapes amont de notre pipeline sortent même lorsque les étapes aval ne parviennent pas à recevoir toutes les valeurs entrantes. Une façon de faire est de changer les canaux sortants pour avoir un tampon. Un tampon peut contenir un nombre fixe de valeurs; Envoyer des opérations immédiatement si il y a de la place dans le tampon:
+Nous devons prendre des dispositions pour que les étapes amont de notre pipeline sortent même lorsque les étapes aval ne parviennent pas à recevoir toutes les valeurs entrantes. Une façon de faire est de changer les canaux sortants pour avoir un tampon. Un tampon peut contenir un nombre fixe de valeurs; Envoyer des opérations immédiatement si il y a de la place dans le tampon :
 
-```
+```go
 c := make(chan int, 2) // buffer size 2
 c <- 1  // succeeds immediately
 c <- 2  // succeeds immediately
 c <- 3  // blocks until another goroutine does <-c and receives 1
 ```
 
-Lorsque le nombre de valeurs à envoyer est connu au moment de la création du canal, un tampon peut simplifier le code. Par exemple, nous pouvons réécrire **gen** pour copier la liste des entiers dans un canal tamponné et ainsi éviter de créer une nouvelle goroutine:
+Lorsque le nombre de valeurs à envoyer est connu au moment de la création du canal, un tampon peut simplifier le code. Par exemple, nous pouvons réécrire **gen** pour copier la liste des entiers dans un canal tamponné et ainsi éviter de créer une nouvelle goroutine :
 
 ```go
 func gen(nums ...int) <-chan int {
@@ -181,7 +181,7 @@ func gen(nums ...int) <-chan int {
 }
 ```
 
-Si nous retournons les goroutines bloquées dans notre pipeline, nous pourrions envisager d'ajouter un buffer au canal sortant renvoyé par **merge**:
+Si nous retournons les goroutines bloquées dans notre pipeline, nous pourrions envisager d'ajouter un buffer au canal sortant renvoyé par **merge** :
 
 ```go
 func merge(cs ...<-chan int) <-chan int {
@@ -196,7 +196,7 @@ Au lieu de cela, nous devons fournir un moyen pour les étapes en aval d'indique
 
 ###Annulation explicite
 
-Quand **main** décide de sortir sans recevoir toutes les valeurs de **out**, il doit dire aux goroutines dans les étapes en amont d'abandonner les valeurs qu'ils essaient d'envoyer. Il le fait en envoyant des valeurs sur un canal appelé **done**. Il envoie deux valeurs puisqu'il ya potentiellement deux expéditeurs bloqués:
+Quand **main** décide de sortir sans recevoir toutes les valeurs de **out**, il doit dire aux goroutines dans les étapes en amont d'abandonner les valeurs qu'ils essaient d'envoyer. Il le fait en envoyant des valeurs sur un canal appelé **done**. Il envoie deux valeurs puisqu'il ya potentiellement deux expéditeurs bloqués :
 
 ```go
 func main() {
@@ -267,7 +267,7 @@ func main() {
 }
 ```
 
-Chacun de nos stades de pipeline est maintenant libre de revenir dès que le **done** est fermé. La routine de sortie **merge** peut retourner sans drainer son canal entrant, puisqu'elle connaît l'expéditeur en amont, **sq**, cessera d'essayer d'envoyer quand il est fermé. La sortie garantit que **wg.Done** est appelé sur tous les chemins de retour via une instruction **defer**:
+Chacun de nos stades de pipeline est maintenant libre de revenir dès que le **done** est fermé. La routine de sortie **merge** peut retourner sans drainer son canal entrant, puisqu'elle connaît l'expéditeur en amont, **sq**, cessera d'essayer d'envoyer quand il est fermé. La sortie garantit que **wg.Done** est appelé sur tous les chemins de retour via une instruction **defer** :
 
 ```go
 func merge(done <-chan struct{}, cs ...<-chan int) <-chan int {
@@ -290,7 +290,7 @@ func merge(done <-chan struct{}, cs ...<-chan int) <-chan int {
     // ... the rest is unchanged ...
 ```
 
-De même, **sq** peut retourner dès que **done** est fermé. **Sq** assure que son canal de sortie est fermé sur tous les chemins de retour via une instruction **defer**:
+De même, **sq** peut retourner dès que **done** est fermé. **Sq** assure que son canal de sortie est fermé sur tous les chemins de retour via une instruction **defer** :
 
 ```go
 func sq(done <-chan struct{}, in <-chan int) <-chan int {
@@ -338,7 +338,7 @@ ee869afd31f83cbb2d10ee81b2b831dc  parallel.go
 b88175e65fdcbc01ac08aaf1fd9b5e96  serial.go
 ```
 
-La fonction principale de notre programme invoque une fonction d'assistance **MD5All**, qui renvoie une carte du nom de chemin à la valeur de digest, puis trie et imprime les résultats:
+La fonction principale de notre programme invoque une fonction d'assistance **MD5All**, qui renvoie une carte du nom de chemin à la valeur de digest, puis trie et imprime les résultats :
 
 ```go
 func main() {
@@ -362,7 +362,7 @@ func main() {
 
 La fonction **MD5All** est au centre de notre discussion. Dans **serial.go**, l'implémentation n'utilise pas de simultanéité et lit et additionne simplement chaque fichier pendant qu'il parcourt l'arborescence.
 
-```
+```go
 // MD5All reads all the files in the file tree rooted at root and returns a map
 // from file path to the MD5 sum of the file's contents.  If the directory walk
 // fails or any read operation fails, MD5All returns an error.
@@ -391,9 +391,9 @@ func MD5All(root string) (map[string][md5.Size]byte, error) {
 
 ###Digestion en parallèle
 
-En parallèle, nous avons divisé **MD5All** en un pipeline à deux étages. Le premier étage, **sumFiles**, parcourt l'arbre, digère chaque fichier dans une nouvelle goroutine et envoie les résultats sur un canal avec le résultat par type de valeur:
+En parallèle, nous avons divisé **MD5All** en un pipeline à deux étages. Le premier étage, **sumFiles**, parcourt l'arbre, digère chaque fichier dans une nouvelle goroutine et envoie les résultats sur un canal avec le résultat par type de valeur :
 
-```
+```go
 type result struct {
     path string
     sum  [md5.Size]byte
@@ -401,7 +401,7 @@ type result struct {
 }
 ```
 
-**sumFiles** renvoie deux canaux: un pour les résultats et un autre pour l'erreur renvoyée par **filepath.Walk**. La fonction **walk** démarre une nouvelle goroutine pour traiter chaque fichier, puis vérifie. S'il est fermé, **walk** s'arrête immédiatement:
+**sumFiles** renvoie deux canaux: un pour les résultats et un autre pour l'erreur renvoyée par **filepath.Walk**. La fonction **walk** démarre une nouvelle goroutine pour traiter chaque fichier, puis vérifie. S'il est fermé, **walk** s'arrête immédiatement :
 
 ```go
 func sumFiles(done <-chan struct{}, root string) (<-chan result, <-chan error) {
@@ -448,7 +448,7 @@ func sumFiles(done <-chan struct{}, root string) (<-chan result, <-chan error) {
 }
 ```
 
-**MD5All** reçoit les valeurs de digest de **c.MD5All** retourne au début de l'erreur, la ferme **done** via un **defer**:
+**MD5All** reçoit les valeurs de digest de **c.MD5All** retourne au début de l'erreur, la ferme **done** via un **defer** :
 
 ```go
 func MD5All(root string) (map[string][md5.Size]byte, error) {
@@ -481,7 +481,7 @@ We can limit these allocations by bounding the number of files read in parallel.
 
 Nous pouvons limiter ces allocations en limitant le nombre de fichiers lus en parallèle. Dans **bounded.go**, nous le faisons en créant un nombre fixe de goroutines pour lire des fichiers. Notre pipeline a maintenant trois étapes: parcourir l'arbre, lire et digérer les dossiers, et collecter les digests.
 
-La première étape, le parcours des fichiers, émet les chemins des fichiers réguliers dans l'arbre:
+La première étape, le parcours des fichiers, émet les chemins des fichiers réguliers dans l'arbre :
 
 ```go
 func walkFiles(done <-chan struct{}, root string) (<-chan string, <-chan error) {
@@ -510,7 +510,7 @@ func walkFiles(done <-chan struct{}, root string) (<-chan string, <-chan error) 
 }
 ```
 
-Le stade intermédiaire commence un nombre fixe de goroutines de digesteur qui reçoivent des noms de fichiers à partir de chemins et envoient des résultats sur le canal c:
+Le stade intermédiaire commence un nombre fixe de goroutines de digesteur qui reçoivent des noms de fichiers à partir de chemins et envoient des résultats sur le canal **c** :
 
 ```go
 func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
@@ -525,7 +525,7 @@ func digester(done <-chan struct{}, paths <-chan string, c chan<- result) {
 }
 ```
 
-Contrairement aux exemples précédents, le digesteur ne ferme pas son canal de sortie, car plusieurs goroutines envoient un canal partagé. Au lieu de cela, le code dans **MD5All** fait en sorte que le canal soit fermé lorsque tous les digesteurs sont terminés:
+Contrairement aux exemples précédents, le digesteur ne ferme pas son canal de sortie, car plusieurs goroutines envoient un canal partagé. Au lieu de cela, le code dans **MD5All** fait en sorte que le canal soit fermé lorsque tous les digesteurs sont terminés :
 
 ```go
     // Start a fixed number of goroutines to read and digest files.
@@ -549,7 +549,7 @@ Nous pourrions plutôt avoir chaque digester créer et retourner son propre cana
 
 The final stage receives all the results from c then checks the error from errc. This check cannot happen any earlier, since before this point, walkFiles may block sending values downstream:
 
-L'étape finale reçoit tous les résultats de **c** puis vérifie l'erreur de **errc**. Cette vérification ne peut pas se produire plus tôt, car avant ce point, **walkFiles** peut bloquer les valeurs d'envoi en aval:
+L'étape finale reçoit tous les résultats de **c** puis vérifie l'erreur de **errc**. Cette vérification ne peut pas se produire plus tôt, car avant ce point, **walkFiles** peut bloquer les valeurs d'envoi en aval :
 
 ```go
     m := make(map[string][md5.Size]byte)
